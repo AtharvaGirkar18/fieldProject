@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <%- include("../partials/navbar") %>
+
+    <div class="container mx-auto mt-8">
+      <h1 class="text-2xl font-bold text-center text-red-600 mb-6">
+        Report for <%= teacher.name %>
+      </h1>
+
+      <% for (let month in groupedLectures) { %>
+      <div class="mb-8 bg-white shadow-lg rounded-lg p-4">
+        <h2
+          class="text-xl font-semibold text-gray-700 bg-gray-300 p-2 rounded-md"
+        >
+          <%= month %>
+        </h2>
+
+        <table class="w-full mt-4 border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 border border-gray-300 text-left">Sr.No.</th>
+              <th class="p-2 border border-gray-300 text-left">Teacher Name</th>
+              <th class="p-2 border border-gray-300 text-left">Date</th>
+              <th class="p-2 border border-gray-300 text-left">Address</th>
+              <th class="p-2 border border-gray-300 text-left">
+                No. of students
+              </th>
+              <th class="p-2 border border-gray-300 text-left">Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% groupedLectures[month].forEach((lecture, index) => { %>
+            <tr class="border-b">
+              <td class="p-2 border border-gray-300"><%= index + 1 %></td>
+              <td class="p-2 border border-gray-300"><%= teacher.name %></td>
+              <td class="p-2 border border-gray-300"><%= lecture.date %></td>
+              <td class="p-2 border border-gray-300"><%= lecture.address %></td>
+              <td class="p-2 border border-gray-300">
+                <%= lecture.studentsPresent %>
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <a
+                  href="/coordinator/lectureDetails/<%= lecture.id %>"
+                  class="text-blue-500 hover:underline"
+                  >✏️</a
+                >
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+
+      <div class="text-center mt-6">
+        <button
+          class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700"
+        >
+          Report To Head
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

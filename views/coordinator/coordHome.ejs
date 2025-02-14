@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coordinator Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <%- include("../partials/navbar") %>
+
+    <!-- Include Navbar -->
+
+    <div class="container mx-auto mt-8 p-4">
+      <h1 class="text-3xl font-bold text-center mb-6">
+        Here are your teachers
+      </h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <% teachers.forEach(teacher => { %>
+        <a
+          href="/coordinator/teacherDetails/<%= teacher.id %>"
+          class="bg-white rounded-xl shadow-lg p-6 w-64 h-64 flex flex-col items-center justify-center text-center hover:shadow-xl transition"
+        >
+          <div class="relative">
+            <img
+              src="<%= teacher.image %>"
+              alt="<%= teacher.name %>"
+              class="w-24 h-24 rounded-full mx-auto"
+            />
+            <span
+              class="absolute bottom-2 right-2 bg-green-500 h-5 w-5 rounded-full border-2 border-white"
+            ></span>
+          </div>
+          <h2 class="text-lg font-semibold mt-4"><%= teacher.name %></h2>
+        </a>
+
+        <% }); %>
+      </div>
+    </div>
+  </body>
+</html>

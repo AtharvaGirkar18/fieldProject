@@ -1,0 +1,40 @@
+<nav class="bg-red-500 p-4 text-white flex justify-between items-center">
+  <div class="flex items-center gap-4">
+    <img src="/images/logo.png" alt="Signal Shala" class="h-10" />
+
+    <% if (currentPage === "headHome" || currentPage === "coordinatorReport" ) {
+    %>
+    <a href="/head/headHome" class="px-4 py-2 hover:bg-red-600 rounded-md"
+      >Home</a
+    >
+    <a href="#" class="px-4 py-2 hover:bg-red-600 rounded-md"
+      >Delete Coordinator</a
+    >
+    <a href="/head/addCoordinator" class="px-4 py-2 hover:bg-red-600 rounded-md"
+      >Add Coordinator</a
+    >
+    <% } else { %>
+    <a
+      href="/coordinator/coordHome"
+      class="px-4 py-2 hover:bg-red-600 rounded-md"
+      >Home</a
+    >
+    <a href="#" class="px-4 py-2 hover:bg-red-600 rounded-md">Delete Teacher</a>
+    <a
+      href="/coordinator/addTeacher"
+      class="px-4 py-2 hover:bg-red-600 rounded-md"
+      >Add Teacher</a
+    >
+
+    <% if (currentPage === "teacherDetails") { %>
+    <a
+      href="/coordinator/report/<%= teacher.id %>"
+      class="px-4 py-2 hover:bg-red-600 rounded-md"
+      >Report</a
+    >
+    <% } %> <% } %>
+  </div>
+  <a href="/" class="px-4 py-2 bg-red-700 rounded-md hover:bg-red-800"
+    >Change Login</a
+  >
+</nav>

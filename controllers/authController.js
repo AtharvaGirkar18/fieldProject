@@ -7,11 +7,11 @@ const postLogin = (req, res) => {
   const { username, password, role } = req.body;
 
   // Dummy authentication (Replace with actual DB check)
-  if (username === "admin" && password === "password") {
+  if (username === "admin" && password === "a") {
     // Redirect based on role
     if (role === "teacher") return res.redirect("/teacher/lecture");
-    if (role === "coordinator") return res.redirect("/coordinator/dashboard");
-    if (role === "head") return res.redirect("/head/dashboard");
+    if (role === "coordinator") return res.redirect("/coordinator/coordHome");
+    if (role === "head") return res.redirect("/head/headHome");
   }
 
   // If login fails, re-render login page with error message

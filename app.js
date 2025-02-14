@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 
 const authRouter = require("./routes/authRouter");
@@ -7,6 +8,8 @@ const headRouter = require("./routes/headRouter");
 const coordinatorRouter = require("./routes/coordinatorRouter");
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", "views");
 
