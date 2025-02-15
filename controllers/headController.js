@@ -100,7 +100,29 @@ const getCoordinatorReport = (req, res, next) => {
   });
 };
 
+const getLectureDetails = (req, res, next) => {
+  const { id } = req.params;
+  console.log("Lecture ID received:", id);
+  // Fake lecture details (Replace with database fetch)
+  const lecture = {
+    id,
+    date: "2025-02-12",
+    time: "10:00 AM",
+    address: "Signal Shala, Pune",
+    studentsPresent: Math.floor(Math.random() * 30) + 10, // Random student count
+    activity: "Taught Mathematics and Science",
+    entryImage: "/images/entryImg.png",
+    exitImage: "/images/exitImg.png",
+  };
+
+  res.render("head/lectureDetails", {
+    lecture,
+    currentPage: "lectureDetails",
+  });
+};
+
 exports.getCoordinators = getCoordinators;
 exports.getAddCoordinator = getAddCoordinator;
 exports.postAddCoordinator = postAddCoordinator;
 exports.getCoordinatorReport = getCoordinatorReport;
+exports.getLectureDetails = getLectureDetails;
