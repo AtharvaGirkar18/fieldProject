@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enter Teacher Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <h2 class="text-2xl font-bold text-center text-blue-600">
+        Assign <%= teacher.username %> To:
+      </h2>
+
+      <form action="/coordinator/assignTeacher/<%= teacherId %>" method="POST">
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium">Coordinator Name</label>
+          <input
+            type="text"
+            name="coordName"
+            placeholder="Enter the coordinator's name"
+            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700">
+          Assign
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
