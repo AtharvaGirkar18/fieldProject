@@ -8,11 +8,18 @@ const getTeachers = (req, res, next) => {
     },
   ];
 
-  res.render("coordinator/coordHome", { teachers, currentPage: "coordHome" });
+  res.render("coordinator/coordHome", {
+    teachers,
+    currentPage: "coordHome",
+    locale: req.getLocale(),
+  });
 };
 
 const getAddTeacher = (req, res, next) => {
-  res.render("coordinator/addTeacher", { currentPage: "addTeacher" });
+  res.render("coordinator/addTeacher", {
+    currentPage: "addTeacher",
+    locale: req.getLocale(),
+  });
 };
 
 const postAddTeacher = (req, res, next) => {
@@ -54,6 +61,7 @@ const getTeacherDetails = (req, res) => {
     teacher: fakeTeacher,
     lectures: fakeTeacher.lectures,
     currentPage: "teacherDetails",
+    locale: req.getLocale(),
   });
 };
 
@@ -128,6 +136,7 @@ const getTeacherReport = (req, res) => {
     teacher: fakeTeacher,
     groupedLectures,
     currentPage: "teacherReport",
+    locale: req.getLocale(),
   });
 };
 
@@ -149,6 +158,7 @@ getLectureDetails = (req, res) => {
   res.render("coordinator/lectureDetails", {
     lecture,
     currentPage: "lectureDetails",
+    locale: req.getLocale(),
   });
 };
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coordinator Report</title>
+    <title><%= __('coordinatorReportTitle') %></title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100">
@@ -11,7 +11,7 @@
 
     <div class="container mx-auto px-4 py-6">
       <h1 class="text-xl sm:text-2xl font-bold text-center text-red-600 mb-2">
-        Today's Report
+        <%= __('todaysReport') %>
       </h1>
 
       <% if(currUser.coordReport && currUser.coordReport.teacherReports.length
@@ -20,7 +20,6 @@
         <%= currUser.coordReport.date.toDateString() %>
       </h2>
 
-      <!-- Responsive Table Wrapper -->
       <div class="overflow-x-auto">
         <table
           class="min-w-full border-collapse border border-gray-300 text-sm sm:text-base"
@@ -30,32 +29,32 @@
               <th
                 class="p-2 border border-gray-300 text-left whitespace-nowrap"
               >
-                Sr.No.
+                <%= __('srNo') %>
               </th>
               <th
                 class="p-2 border border-gray-300 text-left whitespace-nowrap"
               >
-                Teacher's Name
+                <%= __('teacherName') %>
               </th>
               <th
                 class="p-2 border border-gray-300 text-left whitespace-nowrap"
               >
-                Date
+                <%= __('date') %>
               </th>
               <th
                 class="p-2 border border-gray-300 text-left whitespace-nowrap"
               >
-                Address
+                <%= __('address') %>
               </th>
               <th
                 class="p-2 border border-gray-300 text-left whitespace-nowrap"
               >
-                No. of students
+                <%= __('numStudents') %>
               </th>
               <th
                 class="p-2 border border-gray-300 text-left whitespace-nowrap"
               >
-                Entire Report
+                <%= __('entireReport') %>
               </th>
               <th class="p-2 border border-gray-300 text-left"></th>
             </tr>
@@ -83,7 +82,7 @@
                 <a
                   href="/coordinator/lectureDetails/<%= lecture.tReportId._id %>"
                   class="text-blue-500 hover:underline"
-                  >✏️ Link</a
+                  >✏️ <%= __('link') %></a
                 >
               </td>
               <td class="p-2 border border-gray-300 text-center">
@@ -102,20 +101,19 @@
         </table>
       </div>
 
-      <!-- Report Button -->
       <div class="text-center mt-6">
         <form action="/coordinator/createCoordinatorReport" method="get">
           <button
             type="submit"
             class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 text-sm sm:text-base"
           >
-            Report To Head
+            <%= __('reportToHead') %>
           </button>
         </form>
       </div>
       <% } else { %>
       <h2 class="text-xl sm:text-2xl font-bold text-center text-red-600 mt-48">
-        The Report is Empty!
+        <%= __('reportEmpty') %>
       </h2>
       <% } %>
     </div>

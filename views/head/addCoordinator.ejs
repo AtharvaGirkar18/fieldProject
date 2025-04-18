@@ -3,48 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enter Coordinator Details</title>
+    <title><%= __('enterCoordinatorDetailsTitle') %></title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 flex justify-center items-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
       <h2 class="text-2xl font-bold text-center text-blue-600">
-        Enter Coordinator Details
+        <%= __('enterCoordinatorDetailsTitle') %>
       </h2>
       <p class="text-gray-500 text-center mb-6">
-        Fill out the form to add coordinator’s login details.
+        <%= __('fillFormToAddCoordinator') %>
       </p>
 
-      <form action="/head/addCoordinator" method="POST" enctype="multipart/form-data">
+      <form
+        action="/head/addCoordinator"
+        method="POST"
+        enctype="multipart/form-data"
+      >
         <div class="mb-4">
           <label class="block text-gray-700 font-medium"
-            >Coordinator Name</label
+            ><%= __('coordinatorName') %></label
           >
           <input type="hidden" name="userRole" value="head" />
           <input
             type="text"
             name="coordinatorName"
-            placeholder="Enter the coordinator’s name"
+            placeholder="<%= __('enterCoordinatorName') %>"
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div class="mb-4">
-          <label class="block text-gray-700 font-medium">Password</label>
+          <label class="block text-gray-700 font-medium">
+            <%= __('password') %></label
+          >
           <input
             type="password"
             name="password"
-            placeholder="Create a password"
+            placeholder="<%= __('createPassword') %>"
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div class="mb-4">
-          <label class="block text-gray-700 font-medium">Photo</label>
+          <label class="block text-gray-700 font-medium">
+            <%= __('photo') %></label
+          >
           <div class="flex items-center space-x-2">
             <input type="file" name="photo" class="hidden" id="fileInput" />
-            <label for="fileInput" class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer bg-white text-gray-700 hover:bg-gray-100">
-              <span id="fileName">Choose File</span>
+            <label
+              for="fileInput"
+              class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer bg-white text-gray-700 hover:bg-gray-100"
+            >
+              <span id="fileName"><%= __('chooseFile') %></span>
             </label>
           </div>
         </div>
@@ -53,7 +64,7 @@
           type="submit"
           class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700"
         >
-          Create User
+          <%= __('createUser') %>
         </button>
       </form>
     </div>

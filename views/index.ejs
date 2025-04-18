@@ -69,6 +69,7 @@
         padding: 30px 20px;
         border-radius: 15px;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        position: relative;
       }
 
       h2 {
@@ -149,31 +150,32 @@
 
         <!-- Login Card -->
         <div class="container">
-          <h2>Login As</h2>
-          <a href="/auth/login/teacher" class="btn">Teacher</a>
-          <a href="/auth/login/coordinator" class="btn">Coordinator</a>
-          <a href="/auth/login/head" class="btn">Head</a>
+          <form
+            action="/set-language"
+            method="POST"
+            style="position: absolute; top: 15px; right: 20px"
+          >
+            <select name="lang" onchange="this.form.submit()" style="padding: 5px; border-radius: 6px">
+              <option value="en" <%= locale === 'en' ? 'selected' : '' %>>English</option>
+              <option value="hi" <%= locale === 'hi' ? 'selected' : '' %>>हिन्दी</option>
+            </select>
+          </form>
+
+          <h2><%= __("loginAs") %></h2>
+          <a href="/auth/login/teacher" class="btn"><%= __("teacher") %></a>
+          <a href="/auth/login/coordinator" class="btn"><%= __("coordinator") %></a>
+          <a href="/auth/login/head" class="btn"><%= __("head") %></a>
         </div>
 
         <div class="about">
           <h2 style="color: #ec4141; margin-bottom: 10px">
-            Vasti Vikas Prakalp
+            <%= __("Vasti Vikas Prakalp") %>
           </h2>
           <h3 style="color: #0c0c0c; margin-bottom: 10px">
-            Run by Samarth Bharat Vyaspeeth
+            <%= __("Run by Samarth Bharat Vyaspeeth") %>
           </h3>
           <p>
-            They are the children of jobless parents under tremendous social
-            pressure. Their lives lack structure and are torn apart by
-            superstitions. These children have parents crushed by money lenders
-            and debt, and the social system does not recognize their existence.
-            Their health needs are neglected, and they face a bleak future,
-            living only for today. Their family lives are disturbed, and they
-            are shunned by the so-called elite of society. These children endure
-            harsh and adverse conditions. The Vasti Vikas Prakalp strives to
-            bring such children into the mainstream of society by addressing not
-            only their educational needs but also their health and emotional
-            well-being.
+            <%= __("about") %>
           </p>
         </div>
       </div>

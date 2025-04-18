@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coordinator Report</title>
+    <title><%= __('coordinatorReportTitle') %></title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100">
@@ -11,34 +11,39 @@
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
       <h1 class="text-xl sm:text-2xl font-bold text-center text-red-600 mb-6">
-        Reports by <%= currCoord.username %>
+        <%= __('reportsBy') %> <%= currCoord.username %>
       </h1>
 
       <% coordReports.forEach((coordReport, index) => { %>
       <h2
         class="text-lg sm:text-2xl font-bold text-center text-green-600 mb-4 sm:mb-6"
       >
-        Date: <%= coordReport.date.toDateString() %>
+        <%= __('date') %>: <%= coordReport.date.toDateString() %>
       </h2>
 
-      <!-- Table Wrapper for horizontal scroll on small screens -->
       <div class="overflow-x-auto">
         <table
           class="min-w-full border-collapse border border-gray-300 text-sm sm:text-base"
         >
           <thead>
             <tr class="bg-gray-200">
-              <th class="p-2 border border-gray-300 text-left">Sr.No.</th>
               <th class="p-2 border border-gray-300 text-left">
-                Teacher's Name
-              </th>
-              <th class="p-2 border border-gray-300 text-left">Date</th>
-              <th class="p-2 border border-gray-300 text-left">Address</th>
-              <th class="p-2 border border-gray-300 text-left">
-                No. of students
+                <%= __('srNo') %>
               </th>
               <th class="p-2 border border-gray-300 text-left">
-                Entire Report
+                <%= __('teacherName') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('date') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('address') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('noOfStudents') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('entireReport') %>
               </th>
             </tr>
           </thead>
@@ -58,7 +63,7 @@
                 <a
                   href="/head/lectureDetails/<%= lecture._id %>"
                   class="text-blue-500 hover:underline"
-                  >✏️ Link</a
+                  >✏️ <%= __('link') %></a
                 >
               </td>
             </tr>

@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enter Teacher Details</title>
+    <title><%= __('enterTeacherDetailsTitle') %></title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 flex justify-center items-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
       <h2 class="text-2xl font-bold text-center text-blue-600">
-        Enter Teacher Details
+        <%= __('enterTeacherDetailsTitle') %>
       </h2>
       <p class="text-gray-500 text-center mb-6">
-        Fill out the form to add teacher’s login details.
+        <%= __('fillFormToAddTeacher') %>
       </p>
 
       <form
@@ -22,31 +22,40 @@
       >
         <input type="hidden" name="userRole" value="coordinator" />
         <div class="mb-4">
-          <label class="block text-gray-700 font-medium">Teacher Name</label>
+          <label class="block text-gray-700 font-medium">
+            <%= __('teacherName') %></label
+          >
           <input
             type="text"
             name="teacherName"
-            placeholder="Enter the teacher’s name"
+            placeholder="<%= __('enterTeacherName') %>"
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div class="mb-4">
-          <label class="block text-gray-700 font-medium">Password</label>
+          <label class="block text-gray-700 font-medium"
+            ><%= __('password') %></label
+          >
           <input
             type="password"
             name="password"
-            placeholder="Create a password"
+            placeholder="<%= __('createPassword') %>"
             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div class="mb-4">
-          <label class="block text-gray-700 font-medium">Photo</label>
+          <label class="block text-gray-700 font-medium"
+            ><%= __('photo') %></label
+          >
           <div class="flex items-center space-x-2">
             <input type="file" name="photo" class="hidden" id="fileInput" />
-            <label for="fileInput" class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer bg-white text-gray-700 hover:bg-gray-100">
-              <span id="fileName">Choose File</span>
+            <label
+              for="fileInput"
+              class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer bg-white text-gray-700 hover:bg-gray-100"
+            >
+              <span id="fileName"><%= __('chooseFile') %></span>
             </label>
           </div>
         </div>
@@ -55,7 +64,7 @@
           type="submit"
           class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700"
         >
-          Create User
+          <%= __('createUser') %>
         </button>
       </form>
     </div>

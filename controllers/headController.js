@@ -8,11 +8,18 @@ const getCoordinators = (req, res, next) => {
     },
   ];
 
-  res.render("head/headHome", { coordinators, currentPage: "headHome" });
+  res.render("head/headHome", {
+    coordinators,
+    currentPage: "headHome",
+    locale: req.getLocale(),
+  });
 };
 
 const getAddCoordinator = (req, res, next) => {
-  res.render("head/addCoordinator", { currentPage: "addCoordinator" });
+  res.render("head/addCoordinator", {
+    currentPage: "addCoordinator",
+    locale: req.getLocale(),
+  });
 };
 
 const postAddCoordinator = (req, res, next) => {
@@ -97,6 +104,7 @@ const getCoordinatorReport = (req, res, next) => {
     coordinator: fakeCoordinator,
     groupedLectures,
     currentPage: "coordinatorReport",
+    locale: req.getLocale(),
   });
 };
 
@@ -118,6 +126,7 @@ const getLectureDetails = (req, res, next) => {
   res.render("head/lectureDetails", {
     lecture,
     currentPage: "lectureDetails",
+    locale: req.getLocale(),
   });
 };
 

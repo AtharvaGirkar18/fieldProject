@@ -1,6 +1,6 @@
 const getLoginPage = (req, res) => {
   const role = req.query.role || "guest"; // Get role from query param
-  res.render("auth/login", { role, error: null }); // Always pass error (set to null)
+  res.render("auth/login", { role, error: null, locale: req.getLocale() }); // Always pass error (set to null)
 };
 
 const postLogin = (req, res) => {
@@ -15,7 +15,11 @@ const postLogin = (req, res) => {
   }
 
   // If login fails, re-render login page with error message
-  res.render("auth/login", { role, error: "Invalid credentials!" });
+  res.render("auth/login", {
+    role,
+    error: "Invalid credentials!",
+    locale: req.getLocale(),
+  });
 };
 
 module.exports = { getLoginPage, postLogin };
