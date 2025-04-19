@@ -16,9 +16,9 @@
 
       <% coordReports.forEach((coordReport, index) => { %>
       <h2
-        class="text-lg sm:text-2xl font-bold text-center text-green-600 mb-4 sm:mb-6"
+        class="text-lg sm:text-2xl font-bold text-center text-green-600 mt-4 sm:mt-6"
       >
-        <%= __('date') %>: <%= coordReport.date.toDateString() %>
+        <%= __('date') %>: <%= coordReport.date.toDateString().split(" ").slice(0, 4).join(" ") %>
       </h2>
 
       <div class="overflow-x-auto">
@@ -33,9 +33,9 @@
               <th class="p-2 border border-gray-300 text-left">
                 <%= __('teacherName') %>
               </th>
-              <th class="p-2 border border-gray-300 text-left">
+                <th class="p-2 border border-gray-300 text-left">
                 <%= __('date') %>
-              </th>
+                </th>
               <th class="p-2 border border-gray-300 text-left">
                 <%= __('address') %>
               </th>
@@ -54,7 +54,7 @@
               <td class="p-2 border border-gray-300">
                 <%= lecture.teacher.username %>
               </td>
-              <td class="p-2 border border-gray-300"><%= lecture.date %></td>
+              <td class="p-2 border border-gray-300"><%= lecture.date.toDateString().split(" ").slice(0, 4).join(" ") %></td>
               <td class="p-2 border border-gray-300"><%= lecture.address %></td>
               <td class="p-2 border border-gray-300">
                 <%= lecture.attendance %>

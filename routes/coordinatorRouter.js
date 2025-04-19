@@ -145,6 +145,7 @@ coordinatorRouter.get("/report", async (req, res) => {
 });
 
 coordinatorRouter.get("/teacherDetails/:id1/delete/:id2", async (req, res) => {
+  const currUser = req.user;
   const teacherId = req.params.id1;
   const teacherReportId = req.params.id2;
   const delReport = await TeacherReport.findByIdAndDelete(teacherReportId);
@@ -156,17 +157,37 @@ coordinatorRouter.get("/teacherDetails/:id1/delete/:id2", async (req, res) => {
     await cloudinary.uploader.destroy(`Lectures/${publicId2}`);
   }
 
+  // Remove report from the daily coordinator report if present
+  if (delReport && currUser.coordReport && currUser.coordReport.teacherReports) {
+    currUser.coordReport.teacherReports = currUser.coordReport.teacherReports.filter(
+      (lecture) => lecture.tReportId.toString() !== teacherReportId
+    );
+    await currUser.save();
+  }
+
+  // Remove report reference from all coordinator reports
+  if (delReport) {
+    await CoordReport.updateMany(
+      { teacherReports: { $in: [teacherReportId] } },
+      { $pull: { teacherReports: teacherReportId } }
+    );
+
+    // Delete coordinator reports with empty teacherReports array 
+    await CoordReport.deleteMany({ teacherReports: { $size: 0 } });
+  }
+
   res.redirect(`/coordinator/teacherDetails/${teacherId}`);
 });
 
 coordinatorRouter.get("/teacherDetails/:id/clearReports", async (req, res) => {
   try {
+    const currUser = req.user;
     const teacherId = req.params.id;
     
     // First fetch all reports for this teacher
     const reports = await TeacherReport.find({ teacher: teacherId });
-    
-    // Delete images from Cloudinary
+
+    // Delete images from Cloudinary for each report
     for (const report of reports) {
       if (report.entry_image && report.entry_image.path) {
         const publicId1 = report.entry_image.path.split('/').pop().split('.')[0];
@@ -177,9 +198,24 @@ coordinatorRouter.get("/teacherDetails/:id/clearReports", async (req, res) => {
         const publicId2 = report.exit_image.path.split('/').pop().split('.')[0];
         await cloudinary.uploader.destroy(`Lectures/${publicId2}`);
       }
+
+      // Remove report from the daily coordinator report if present
+      currUser.coordReport.teacherReports = currUser.coordReport.teacherReports.filter(
+        (lecture) => lecture.tReportId.toString() !== report._id.toString()
+      );
+      await currUser.save();
+
+      // Remove report references from coordinator reports
+      await CoordReport.updateMany(
+        { teacherReports: { $in: [report._id] } },
+        { $pull: { teacherReports: report._id } }
+      );
     }
 
-    // Then delete all reports from database
+    // Delete coordinator reports with empty teacherReports array 
+    await CoordReport.deleteMany({ teacherReports: { $size: 0 } });
+
+    // Finally delete all reports from database
     await TeacherReport.deleteMany({ teacher: teacherId });
     
     res.redirect(`/coordinator/teacherDetails/${teacherId}`);

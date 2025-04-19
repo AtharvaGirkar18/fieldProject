@@ -28,7 +28,7 @@ authRouter.get("/login/head", (req, res) => {
 authRouter.post("/login/teacher", passport.authenticate("teacher", {failureRedirect: "/login/teacher"}), (req, res) => {
     req.session.save((err) => {
         if (err) {
-            return res.redirect("/auth/login/coordinator");
+            return res.redirect("/");
         }
         res.redirect("/teacher/lecture");
     });
@@ -37,7 +37,7 @@ authRouter.post("/login/teacher", passport.authenticate("teacher", {failureRedir
 authRouter.post("/login/coordinator", passport.authenticate("coordinator", {failureRedirect: "/login/coordinator"}), (req, res) => {
     req.session.save((err) => {
         if (err) {
-            return res.redirect("/auth/login/coordinator");
+            return res.redirect("/");
         }
         res.redirect("/coordinator/coordHome");
     });
@@ -46,7 +46,7 @@ authRouter.post("/login/coordinator", passport.authenticate("coordinator", {fail
 authRouter.post("/login/head", passport.authenticate("head", {failureRedirect: "/login/head"}), (req, res) => {
     req.session.save((err) => {
         if (err) {
-            return res.redirect("/auth/login/coordinator");
+            return res.redirect("/");
         }
         res.redirect("/head/headHome");
     });
