@@ -2,8 +2,7 @@ if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
 
-const dburl =
-  "mongodb+srv://hugeppkaeya:7Mnc2xu6tyAKwLnv@cluster0.vsgbwfo.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0";
+const dburl = rocess.env.ATLASDB_URL;
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -62,7 +61,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const store = MongoStore.create({
   mongoUrl: dburl,
   crypto: {
-    secret: process.env.SECRET || "temporarySecret",
+    secret: process.env.SECRET,
   },
   touchAfter: 24 * 3600,
 });
@@ -81,7 +80,7 @@ store.on("error", (err) => {
 
 const sessionOptions = {
   store,
-  secret: process.env.SECRET || "temporarySecret",
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false,
 };
