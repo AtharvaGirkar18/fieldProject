@@ -2,7 +2,7 @@ if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
 
-const dburl = rocess.env.ATLASDB_URL;
+const dburl = process.env.ATLASDB_URL;
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
