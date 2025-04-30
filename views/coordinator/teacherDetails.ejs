@@ -28,7 +28,7 @@
       <p class="text-center text-gray-500"><%= __('noLectures') %></p>
       <% } else { %>
       <div class="w-full flex flex-col items-center gap-6">
-        <% lectures.forEach(lecture => { %>
+        <% lectures.slice().reverse().forEach(lecture => { %>
         <div
           class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-lg relative flex flex-col gap-4"
         >
