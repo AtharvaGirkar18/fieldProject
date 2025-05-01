@@ -7,25 +7,44 @@
 
       <!-- Desktop Nav Links -->
       <div class="hidden md:flex gap-3 sm:gap-4">
-        <% if (currentPage === "headHome" || currentPage === "coordinatorReport" || currentPage === "HeadLectureDetails") { %>
-          <a href="/head/headHome" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md"><%= __('Home') %></a>
-          <a href="/head/addCoordinator" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md"><%= __('Add Coordinator') %></a>
-          <% if (currentPage === "coordinatorReport") { %>
-            <button onclick="confirmDeleteCoord('<%= currCoord._id %>')" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+        <% if (currentPage==="headHome" || currentPage==="coordinatorReport" || currentPage==="HeadLectureDetails" ) {
+          %>
+          <a href="/head/headHome" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+            <%= __('Home') %>
+          </a>
+          <a href="/head/addCoordinator" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+            <%= __('Add Coordinator') %>
+          </a>
+          <a href="/head/export-reports" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+            <%= __('Export Report') %>
+          </a>
+          <% if (currentPage==="coordinatorReport" ) { %>
+            <button onclick="confirmDeleteCoord('<%= currCoord._id %>')"
+              class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
               <%= __('Delete Coordinator') %>
             </button>
-          <% } %>
-        <% } else { %>
-          <a href="/coordinator/coordHome" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md"><%= __('Home') %></a>
-          <a href="/coordinator/addTeacher" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md"><%= __('Add Teacher') %></a>
-          <a href="/coordinator/report" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md"><%= __('Report') %></a>
-          <% if (currentPage === "teacherDetails") { %>
-            <button onclick="confirmDeleteTeacher('<%= teacher._id %>')" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
-              <%= __('Delete Teacher') %>
-            </button>
-            <a href="/coordinator/assign/<%= teacher._id %>" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md"><%= __('Assign Teacher') %></a>
-          <% } %>
-        <% } %>
+            <% } %>
+              <% } else { %>
+                <a href="/coordinator/coordHome" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+                  <%= __('Home') %>
+                </a>
+                <a href="/coordinator/addTeacher" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+                  <%= __('Add Teacher') %>
+                </a>
+                <a href="/coordinator/report" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+                  <%= __('Report') %>
+                </a>
+                <% if (currentPage==="teacherDetails" ) { %>
+                  <button onclick="confirmDeleteTeacher('<%= teacher._id %>')"
+                    class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+                    <%= __('Delete Teacher') %>
+                  </button>
+                  <a href="/coordinator/assign/<%= teacher._id %>"
+                    class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+                    <%= __('Assign Teacher') %>
+                  </a>
+                  <% } %>
+                    <% } %>
       </div>
     </div>
 
@@ -34,14 +53,16 @@
       <!-- Language Selector (Desktop) -->
       <form action="/set-language" method="POST" class="hidden md:block">
         <select name="lang" onchange="this.form.submit()" class="bg-red-700 text-white px-2 py-1 rounded-md">
-          <option value="en" <%= locale === "en" ? "selected" : "" %>>English</option>
-          <option value="hi" <%= locale === "hi" ? "selected" : "" %>>हिंदी</option>
+          <option value="en" <%=locale==="en" ? "selected" : "" %>>English</option>
+          <option value="hi" <%=locale==="hi" ? "selected" : "" %>>हिंदी</option>
         </select>
       </form>
 
       <!-- Desktop Profile & Logout -->
       <div class="hidden md:flex items-center gap-4">
-        <a href="/" class="px-3 py-1 bg-red-700 rounded-md hover:bg-red-800"><%= __('Change Login') %></a>
+        <a href="/" class="px-3 py-1 bg-red-700 rounded-md hover:bg-red-800">
+          <%= __('Change Login') %>
+        </a>
         <img src="<%= currUser.picture.path %>" alt="Profile" class="w-10 h-10 rounded-full border border-white" />
       </div>
 
@@ -57,45 +78,64 @@
 
     <!-- ✅ MOBILE MENU -->
     <div id="mobileMenu" class="hidden md:hidden w-full mt-2 flex flex-col gap-1 sm:gap-2 items-start">
-      <% if (currentPage === "headHome" || currentPage === "coordinatorReport" || currentPage === "HeadLectureDetails") { %>
-        <a href="/head/headHome" class="px-3 py-1 hover:bg-red-600 rounded-md"><%= __('Home') %></a>
-        <a href="/head/addCoordinator" class="px-3 py-1 hover:bg-red-600 rounded-md"><%= __('Add Coordinator') %></a>
-        <% if (currentPage === "coordinatorReport") { %>
-          <button onclick="confirmDeleteCoord('<%= currCoord._id %>')" class="px-3 py-1 hover:bg-red-600 rounded-md w-full text-left">
+      <% if (currentPage==="headHome" || currentPage==="coordinatorReport" || currentPage==="HeadLectureDetails" ) { %>
+        <a href="/head/headHome" class="px-3 py-1 hover:bg-red-600 rounded-md">
+          <%= __('Home') %>
+        </a>
+        <a href="/head/addCoordinator" class="px-3 py-1 hover:bg-red-600 rounded-md">
+          <%= __('Add Coordinator') %>
+        </a>
+        <a href="/head/export-reports" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
+          <%= __('Export Report') %>
+        </a>
+        <% if (currentPage==="coordinatorReport" ) { %>
+          <button onclick="confirmDeleteCoord('<%= currCoord._id %>')"
+            class="px-3 py-1 hover:bg-red-600 rounded-md w-full text-left">
             <%= __('Delete Coordinator') %>
           </button>
-        <% } %>
-      <% } else { %>
-        <a href="/coordinator/coordHome" class="px-3 py-1 hover:bg-red-600 rounded-md"><%= __('Home') %></a>
-        <a href="/coordinator/addTeacher" class="px-3 py-1 hover:bg-red-600 rounded-md"><%= __('Add Teacher') %></a>
-        <a href="/coordinator/report" class="px-3 py-1 hover:bg-red-600 rounded-md"><%= __('Report') %></a>
-        <% if (currentPage === "teacherDetails") { %>
-          <button onclick="confirmDeleteTeacher('<%= teacher._id %>')" class="px-3 py-1 hover:bg-red-600 rounded-md w-full text-left">
-            <%= __('Delete Teacher') %>
-          </button>
-          <a href="/coordinator/assign/<%= teacher._id %>" class="px-3 py-1 hover:bg-red-600 rounded-md"><%= __('Assign Teacher') %></a>
-        <% } %>
-      <% } %>
+          <% } %>
+            <% } else { %>
+              <a href="/coordinator/coordHome" class="px-3 py-1 hover:bg-red-600 rounded-md">
+                <%= __('Home') %>
+              </a>
+              <a href="/coordinator/addTeacher" class="px-3 py-1 hover:bg-red-600 rounded-md">
+                <%= __('Add Teacher') %>
+              </a>
+              <a href="/coordinator/report" class="px-3 py-1 hover:bg-red-600 rounded-md">
+                <%= __('Report') %>
+              </a>
+              <% if (currentPage==="teacherDetails" ) { %>
+                <button onclick="confirmDeleteTeacher('<%= teacher._id %>')"
+                  class="px-3 py-1 hover:bg-red-600 rounded-md w-full text-left">
+                  <%= __('Delete Teacher') %>
+                </button>
+                <a href="/coordinator/assign/<%= teacher._id %>" class="px-3 py-1 hover:bg-red-600 rounded-md">
+                  <%= __('Assign Teacher') %>
+                </a>
+                <% } %>
+                  <% } %>
 
-      <!-- ✅ Language Selector (Mobile) -->
-      <form action="/set-language" method="POST" class="w-full flex justify-center mt-2">
-        <select name="lang" onchange="this.form.submit()" class="bg-red-700 text-white px-3 py-1 rounded-md">
-          <option value="en" <%= locale === "en" ? "selected" : "" %>>English</option>
-          <option value="hi" <%= locale === "hi" ? "selected" : "" %>>हिंदी</option>
-        </select>
-      </form>
+                    <!-- ✅ Language Selector (Mobile) -->
+                    <form action="/set-language" method="POST" class="w-full flex justify-center mt-2">
+                      <select name="lang" onchange="this.form.submit()"
+                        class="bg-red-700 text-white px-3 py-1 rounded-md">
+                        <option value="en" <%=locale==="en" ? "selected" : "" %>>English</option>
+                        <option value="hi" <%=locale==="hi" ? "selected" : "" %>>हिंदी</option>
+                      </select>
+                    </form>
 
-      <!-- ✅ Profile Picture (Mobile) -->
-      <div class="w-full flex justify-center mt-3">
-        <img src="<%= currUser.picture.path %>" alt="Profile Picture" class="w-12 h-12 rounded-full border border-white" />
-      </div>
+                    <!-- ✅ Profile Picture (Mobile) -->
+                    <div class="w-full flex justify-center mt-3">
+                      <img src="<%= currUser.picture.path %>" alt="Profile Picture"
+                        class="w-12 h-12 rounded-full border border-white" />
+                    </div>
 
-      <!-- ✅ Centered Change Login -->
-      <div class="w-full flex justify-center">
-        <a href="/" class="px-4 py-2 mt-1 bg-red-700 rounded-md hover:bg-red-800 text-white text-center">
-          <%= __('Change Login') %>
-        </a>
-      </div>
+                    <!-- ✅ Centered Change Login -->
+                    <div class="w-full flex justify-center">
+                      <a href="/" class="px-4 py-2 mt-1 bg-red-700 rounded-md hover:bg-red-800 text-white text-center">
+                        <%= __('Change Login') %>
+                      </a>
+                    </div>
     </div>
   </div>
 </nav>

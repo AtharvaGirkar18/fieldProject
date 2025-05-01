@@ -12,9 +12,9 @@ const {
   getLectureDetails,
 } = require("../controllers/coordinatorController");
 
-const {TeacherStorage} = require("../cloudConfig.js");
+const { TeacherStorage } = require("../cloudConfig.js");
 const multer = require('multer');
-const upload = multer({storage: TeacherStorage}); 
+const upload = multer({ storage: TeacherStorage });
 
 const Teacher = require("../models/teacher.js");
 const Coordinator = require("../models/coordinator.js");
@@ -24,7 +24,7 @@ const CoordReport = require("../models/coordinatorReport.js");
 // Add authentication middleware
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated() && req.user.constructor.modelName === 'Coordinator') {
-      return next();
+    return next();
   }
   res.redirect("/auth/login/coordinator");
 };
@@ -33,8 +33,8 @@ const isAuthenticated = (req, res, next) => {
 coordinatorRouter.use(isAuthenticated);
 
 coordinatorRouter.get("/coordHome", async (req, res) => {
-  const {username} = req.user;
-  const currUser = await Coordinator.findOne({username}).populate("teachers");
+  const { username } = req.user;
+  const currUser = await Coordinator.findOne({ username }).populate("teachers");
   res.render("coordinator/coordHome", { currUser, currentPage: "coordHome" });
 });
 
@@ -44,10 +44,10 @@ coordinatorRouter.get("/addTeacher", (req, res) => {
 
 coordinatorRouter.post("/addTeacher", upload.single('photo'), async (req, res) => {
   const currUser = req.user;
-  let {teacherName, password} = req.body;
-  let {path, fieldname} = req.file;
+  let { teacherName, password } = req.body;
+  let { path, fieldname } = req.file;
   try {
-    const newTeacher = new Teacher({picture: {path, fieldname}, username: teacherName});
+    const newTeacher = new Teacher({ picture: { path, fieldname }, username: teacherName });
     const registeredTeacher = await Teacher.register(newTeacher, password);
     currUser.teachers.push(registeredTeacher);
     await currUser.save();
@@ -60,7 +60,7 @@ coordinatorRouter.post("/addTeacher", upload.single('photo'), async (req, res) =
 coordinatorRouter.get("/teacherDetails/:id", async (req, res) => {
   const currUser = req.user;
   const currTeacher = await Teacher.findById(req.params.id);
-  const teacherReports = await TeacherReport.find({teacher: req.params.id});
+  const teacherReports = await TeacherReport.find({ teacher: req.params.id });
   res.render("coordinator/teacherDetails", {
     currUser,
     teacher: currTeacher,
@@ -80,11 +80,11 @@ coordinatorRouter.get("/delete/:id", async (req, res) => {
     );
     const newUser = await currUser.save();
 
-    if(newUser) {
+    if (newUser) {
       // Delete the teacher
       const delTeacher = await Teacher.findByIdAndDelete(teacherId);
-      if(delTeacher && delTeacher.picture) {
-        // Delete image from Cloudinary
+      if (delTeacher && delTeacher.picture) {
+        // Delete profile image from Cloudinary
         const publicId = delTeacher.picture.path.split('/').pop().split('.')[0];
         await cloudinary.uploader.destroy(`Teachers/${publicId}`);
 
@@ -96,14 +96,14 @@ coordinatorRouter.get("/delete/:id", async (req, res) => {
 
         // Remove reports from coordinator's current day report
         if (newUser.coordReport && newUser.coordReport.teacherReports) {
-            const reportIds = reportsToDelete.map(report => report._id.toString());
-            newUser.coordReport.teacherReports = newUser.coordReport.teacherReports.filter(
-                lecture => !reportIds.includes(lecture.tReportId.toString())
-            );
-            await newUser.save();
+          const reportIds = reportsToDelete.map(report => report._id.toString());
+          newUser.coordReport.teacherReports = newUser.coordReport.teacherReports.filter(
+            lecture => !reportIds.includes(lecture.tReportId.toString())
+          );
+          await newUser.save();
         }
       }
-    }  
+    }
 
     res.redirect("/coordinator/coordHome");
   } catch (error) {
@@ -118,16 +118,19 @@ coordinatorRouter.get("/reportadd/:id1/:id2", async (req, res) => {
   const teacherReportId = req.params.id2;
 
   const lecDetails = await TeacherReport.findById(teacherReportId).populate("teacher");
-  const {teacher} = lecDetails;
+  const { teacher } = lecDetails;
   currUser.coordReport.teacherReports.push({
     tReportId: teacherReportId,
     teacher_name: teacher.username,
   });
 
-  currUser.coordReport.date = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+  const localDate = new Date(today.getTime() - (offset * 60 * 1000));
+  currUser.coordReport.date = localDate.toISOString().split('T')[0];
   const updatedUser = await currUser.save();
 
-  if(updatedUser) {
+  if (updatedUser) {
     res.redirect("/coordinator/report");
   } else {
     res.redirect(`/teacherDetails/${teacherId}`);
@@ -149,12 +152,14 @@ coordinatorRouter.get("/teacherDetails/:id1/delete/:id2", async (req, res) => {
   const teacherId = req.params.id1;
   const teacherReportId = req.params.id2;
   const delReport = await TeacherReport.findByIdAndDelete(teacherReportId);
-  if(delReport) {
+  if (delReport) {
     const publicId1 = delReport.entry_image.path.split('/').pop().split('.')[0];
     await cloudinary.uploader.destroy(`Lectures/${publicId1}`);
 
-    const publicId2 = delReport.exit_image.path.split('/').pop().split('.')[0];
-    await cloudinary.uploader.destroy(`Lectures/${publicId2}`);
+    for (const exitImage of delReport.exit_images) {
+      const exitImageId = exitImage.path.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(`Lectures/${exitImageId}`);
+    }
   }
 
   // Remove report from the daily coordinator report if present
@@ -183,7 +188,7 @@ coordinatorRouter.get("/teacherDetails/:id/clearReports", async (req, res) => {
   try {
     const currUser = req.user;
     const teacherId = req.params.id;
-    
+
     // First fetch all reports for this teacher
     const reports = await TeacherReport.find({ teacher: teacherId });
 
@@ -193,10 +198,12 @@ coordinatorRouter.get("/teacherDetails/:id/clearReports", async (req, res) => {
         const publicId1 = report.entry_image.path.split('/').pop().split('.')[0];
         await cloudinary.uploader.destroy(`Lectures/${publicId1}`);
       }
-      
-      if (report.exit_image && report.exit_image.path) {
-        const publicId2 = report.exit_image.path.split('/').pop().split('.')[0];
-        await cloudinary.uploader.destroy(`Lectures/${publicId2}`);
+
+      if (report.exit_images) {
+        for (const exitImage of report.exit_images) {
+          const exitImageId = exitImage.path.split('/').pop().split('.')[0];
+          await cloudinary.uploader.destroy(`Lectures/${exitImageId}`);
+        }
       }
 
       // Remove report from the daily coordinator report if present
@@ -217,7 +224,7 @@ coordinatorRouter.get("/teacherDetails/:id/clearReports", async (req, res) => {
 
     // Finally delete all reports from database
     await TeacherReport.deleteMany({ teacher: teacherId });
-    
+
     res.redirect(`/coordinator/teacherDetails/${teacherId}`);
   } catch (error) {
     console.error("Error clearing reports:", error);
@@ -246,16 +253,16 @@ coordinatorRouter.get("/createCoordinatorReport", async (req, res) => {
   }
 
   const newCoordReport = new CoordReport({
-    coordinator: currUser._id, 
-    date: currUser.coordReport.date, 
-    });
+    coordinator: currUser._id,
+    date: currUser.coordReport.date,
+  });
 
-  for(let i = 0; i < num; i++) {
+  for (let i = 0; i < num; i++) {
     newCoordReport.teacherReports.push(currUser.coordReport.teacherReports[i].tReportId);
   }
-    
+
   const finalReport = await newCoordReport.save();
-  if(finalReport) {
+  if (finalReport) {
     currUser.coordReport.date = null;
     currUser.coordReport.teacherReports = [];
     await currUser.save();
@@ -269,18 +276,18 @@ coordinatorRouter.get("/createCoordinatorReport", async (req, res) => {
 coordinatorRouter.get("/assign/:id", async (req, res) => {
   const teacherId = req.params.id;
   const teacher = await Teacher.findById(teacherId);
-  res.render("coordinator/assignTeacher", {teacher, teacherId});
+  res.render("coordinator/assignTeacher", { teacher, teacherId });
 });
 
 coordinatorRouter.post("/assignTeacher/:id", async (req, res) => {
   const currUser = req.user;
   const teacherId = req.params.id;
-  const {coordName} = req.body;
+  const { coordName } = req.body;
 
   currUser.teachers = currUser.teachers.filter((teacher) => teacher.toString() !== teacherId);
   await currUser.save();
 
-  const newCoord = await Coordinator.findOne({username: coordName});
+  const newCoord = await Coordinator.findOne({ username: coordName });
   if (newCoord) {
     newCoord.teachers.push(teacherId);
     await newCoord.save();
@@ -292,13 +299,13 @@ coordinatorRouter.post("/assignTeacher/:id", async (req, res) => {
 
 coordinatorRouter.get("/removereport/:id", async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const currUser = req.user;
     // console.log(id + "     " + currUser.coordReport.teacherReports[0]._id);
     currUser.coordReport.teacherReports = currUser.coordReport.teacherReports.filter((lecture) => lecture._id.toString() !== id);
     await currUser.save();
     res.redirect("/coordinator/report");
-  } catch(err) {
+  } catch (err) {
     console.log("Encountered an error: " + err);
   }
 });

@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= __('teacherDetailsTitle') %></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
 
-  <body class="bg-gray-100">
-    <%- include("../partials/navbar.ejs", currUser, teacher) %>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= __('teacherDetailsTitle') %>
+  </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+  <%- include("../partials/navbar.ejs", currUser, teacher) %>
 
     <div class="container mx-auto px-4 py-8">
       <h1 class="text-2xl font-bold text-center text-red-500 mb-6">
@@ -16,104 +19,149 @@
       </h1>
 
       <div class="flex justify-center mb-6">
-        <a
-          href="/coordinator/teacherDetails/<%= teacher._id %>/clearReports"
-          class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition duration-200 text-sm sm:text-base"
-        >
+        <a href="/coordinator/teacherDetails/<%= teacher._id %>/clearReports"
+          class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition duration-200 text-sm sm:text-base">
           <%= __('deleteAllReports') %>
         </a>
       </div>
 
-      <% if (lectures.length === 0) { %>
-      <p class="text-center text-gray-500"><%= __('noLectures') %></p>
-      <% } else { %>
-      <div class="w-full flex flex-col items-center gap-6">
-        <% lectures.slice().reverse().forEach(lecture => { %>
-        <div
-          class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-lg relative flex flex-col gap-4"
-        >
-          <!-- Entry + Exit Images Row -->
-          <div class="flex justify-between gap-4 flex-wrap sm:flex-nowrap">
-            <img
-              src="<%= lecture.entry_image.path %>"
-              alt="<%= __('entryImageAlt') %>"
-              class="zoomable w-full sm:w-1/2 h-32 object-contain bg-white rounded-lg border border-gray-300 shadow-md cursor-pointer"
-            />
-            <img
-              src="<%= lecture.exit_image.path %>"
-              alt="<%= __('exitImageAlt') %>"
-              class="zoomable w-full sm:w-1/2 h-32 object-contain bg-white rounded-lg border border-gray-300 shadow-md cursor-pointer"
-            />
-          </div>
+      <% if (lectures.length===0) { %>
+        <p class="text-center text-gray-500">
+          <%= __('noLectures') %>
+        </p>
+        <% } else { %>
+          <div class="w-full flex flex-col items-center gap-6">
+            <% lectures.slice().reverse().forEach(lecture=> { %>
+              <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-lg relative flex flex-col gap-4">
+                <!-- Entry + Exit Images Row -->
+                <div class="flex flex-col gap-4">
+                  <!-- Entry Image -->
+                  <div class="relative w-full">
+                    <img src="<%= lecture.entry_image.path %>" alt="<%= __('entryImageAlt') %>"
+                      class="zoomable w-full h-32 object-contain bg-white rounded-lg border border-gray-300 shadow-md cursor-pointer" />
+                    <a href="<%= lecture.entry_image.path.replace('/upload/', '/upload/fl_attachment/') %>"
+                      download="entry_image.jpg"
+                      class="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+                      onclick="handleDownload(event, this.href)">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </a>
+                  </div>
 
-          <!-- Lecture Info -->
-          <div class="text-sm sm:text-base px-1">
-            <h2 class="text-base sm:text-lg font-bold text-blue-600 mb-2">
-              <%= lecture.date.toDateString() %> - <%=
-              lecture.time.toLocaleString().split(", ")[1] %>
+                  <!-- Exit Images Grid -->
+                  <div class="w-full">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">
+                      <%= __('exitImages') %>
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      <% lecture.exit_images.forEach((image, index)=> { %>
+                        <div class="relative">
+                          <img src="<%= image.path %>" alt="<%= __('exitImageAlt') %> <%= index + 1 %>"
+                            class="zoomable w-full h-32 object-contain bg-white rounded-lg border border-gray-300 shadow-md cursor-pointer" />
+                          <a href="<%= image.path.replace('/upload/', '/upload/fl_attachment/') %>"
+                            download="exit_image_<%= index + 1 %>.jpg"
+                            class="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+                            onclick="handleDownload(event, this.href)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none"
+                              viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                          </a>
+                        </div>
+                        <% }) %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Lecture Info -->
+                <div class="text-sm sm:text-base px-1">
+                  <h2 class="text-base sm:text-lg font-bold text-blue-600 mb-2">
+                    <%= lecture.date.toDateString() %> - <%= lecture.time.toLocaleString().split(", ")[1] %>
             </h2>
-            <p class="text-gray-700">
-              <strong>📍 <%= __('address') %>:</strong> <%= lecture.address %>
-            </p>
-            <p class="text-gray-700">
-              <strong>👥 <%= __('studentsPresent') %>:</strong> <%=
-              lecture.attendance %>
-            </p>
-            <p class="text-gray-700 break-words">
-              <strong>📖 <%= __('activity') %>:</strong>
-              <span class="whitespace-pre-wrap inline">
-                <%= lecture.activity %>
-              </span>
-            </p>
+            <p class=" text-gray-700">
+                        <strong>📍 <%= __('address') %>:</strong>
+                        <%= lecture.address %>
+                          </p>
+                          <p class="text-gray-700">
+                            <strong>👥 <%= __('studentsPresent') %>:</strong>
+                            <%= lecture.attendance %>
+                          </p>
+                          <p class="text-gray-700 break-words">
+                            <strong>📖 <%= __('activity') %>:</strong>
+                            <span class="whitespace-pre-wrap inline">
+                              <%= lecture.activity %>
+                            </span>
+                          </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-between gap-2">
+                  <a href="/coordinator/reportadd/<%= teacher._id %>/<%= lecture._id %>"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 text-center w-full sm:w-auto">
+                    <%= __('addToReport') %>
+                  </a>
+                  <a href="/coordinator/teacherDetails/<%= teacher._id %>/delete/<%= lecture._id %>"
+                    class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 text-center w-full sm:w-auto">
+                    <%= __('delete') %>
+                  </a>
+                </div>
+              </div>
+              <% }) %>
           </div>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-col sm:flex-row justify-between gap-2">
-            <a
-              href="/coordinator/reportadd/<%= teacher._id %>/<%= lecture._id %>"
-              class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 text-center w-full sm:w-auto"
-            >
-              <%= __('addToReport') %>
-            </a>
-            <a
-              href="/coordinator/teacherDetails/<%= teacher._id %>/delete/<%= lecture._id %>"
-              class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 text-center w-full sm:w-auto"
-            >
-              <%= __('delete') %>
-            </a>
+          <!-- Fullscreen Image Modal -->
+          <div id="imageModal"
+            class="fixed inset-0 bg-black bg-opacity-75 hidden flex justify-center items-center z-50">
+            <img id="modalImage" class="max-w-3xl max-h-[80vh] rounded-lg shadow-2xl" />
           </div>
-        </div>
-        <% }) %>
-      </div>
 
-      <!-- Fullscreen Image Modal -->
-      <div
-        id="imageModal"
-        class="fixed inset-0 bg-black bg-opacity-75 hidden flex justify-center items-center z-50"
-      >
-        <img
-          id="modalImage"
-          class="max-w-3xl max-h-[80vh] rounded-lg shadow-2xl"
-        />
-      </div>
+          <script>
+            const images = document.querySelectorAll(".zoomable");
+            const modal = document.getElementById("imageModal");
+            const modalImage = document.getElementById("modalImage");
 
-      <script>
-        const images = document.querySelectorAll(".zoomable");
-        const modal = document.getElementById("imageModal");
-        const modalImage = document.getElementById("modalImage");
+            images.forEach((image) => {
+              image.addEventListener("click", () => {
+                modalImage.src = image.src;
+                modal.classList.remove("hidden");
+              });
+            });
 
-        images.forEach((image) => {
-          image.addEventListener("click", () => {
-            modalImage.src = image.src;
-            modal.classList.remove("hidden");
-          });
-        });
+            modal.addEventListener("click", () => {
+              modal.classList.add("hidden");
+            });
 
-        modal.addEventListener("click", () => {
-          modal.classList.add("hidden");
-        });
-      </script>
-      <% } %>
+            function handleDownload(event, url) {
+              event.preventDefault();
+              event.stopPropagation();
+
+              // Extract filename from the URL or use the provided name
+              const filename = url.includes('exit_image') ?
+                url.split('/').pop().replace('fl_attachment/', '') :
+                'entry_image.jpg';
+
+              fetch(url)
+                .then(response => response.blob())
+                .then(blob => {
+                  const blobUrl = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.style.display = 'none';
+                  a.href = blobUrl;
+                  a.download = filename;
+                  document.body.appendChild(a);
+                  a.click();
+                  window.URL.revokeObjectURL(blobUrl);
+                  document.body.removeChild(a);
+                })
+                .catch(error => console.error('Download failed:', error));
+            }
+          </script>
+          <% } %>
     </div>
-  </body>
+</body>
+
 </html>
