@@ -121,7 +121,7 @@ headRouter.get("/lectureDetails/:id", async (req, res) => {
   });
 });
 
-headRouter.get("/export-reports", async (req, res) => {
+headRouter.get("/export-daily-reports", async (req, res) => {
   try {
     // Get today's date in YYYY-MM-DD format
     const today = new Date();
@@ -197,5 +197,73 @@ headRouter.get("/export-reports", async (req, res) => {
     res.status(500).send("Error exporting reports");
   }
 });
+
+headRouter.get("/export-all-reports", async (req, res) => {
+  try {
+    // Create workbook
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('All Reports');
+
+    // Set up headers
+    worksheet.columns = [
+      { header: 'Coordinator', key: 'coordinator', width: 20 },
+      { header: 'Teacher', key: 'teacher', width: 20 },
+      { header: 'Date', key: 'date', width: 15 },
+      { header: 'Time', key: 'time', width: 15 },
+      { header: 'Address', key: 'address', width: 30 },
+      { header: 'Attendance', key: 'attendance', width: 15 },
+      { header: 'Activity', key: 'activity', width: 40 }
+    ];
+
+    worksheet.getRow(1).font = { bold: true };
+
+    // Get all coordinator reports with populated references
+    const coordReports = await CoordReport.find({
+    }).populate({
+      path: 'coordinator',
+      select: 'username'
+    }).populate({
+      path: 'teacherReports',
+      populate: {
+        path: 'teacher',
+        select: 'username'
+      }
+    });
+
+    // Add data rows
+    coordReports.forEach(coordReport => {
+      coordReport.teacherReports.forEach(teacherReport => {
+        worksheet.addRow({
+          coordinator: coordReport.coordinator.username,
+          teacher: teacherReport.teacher.username,
+          date: teacherReport.date.toLocaleDateString(),
+          time: teacherReport.time.toLocaleTimeString(),
+          address: teacherReport.address,
+          attendance: teacherReport.attendance,
+          activity: teacherReport.activity
+        });
+      });
+    });
+
+    // Set response headers
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=coordinator-reports.xlsx`
+    );
+
+    // Write to response
+    await workbook.xlsx.write(res);
+    res.end();
+
+  } catch (error) {
+    console.error("Error exporting reports:", error);
+    res.status(500).send("Error exporting reports");
+  }
+});
+
 
 module.exports = headRouter;

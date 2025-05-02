@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= __('headHomeTitle') %></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-100">
-    <%- include("../partials/navbar", currUser) %>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= __('headHomeTitle') %>
+  </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+  <%- include("../partials/navbar", currUser) %>
 
     <div class="container mx-auto px-4 py-6">
       <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6">
         <%= __('yourCoordinators') %>
       </h1>
 
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center"
-      >
-        <% currUser.coordinators.forEach(coordinator => { %>
-        <a
-          href="/head/coordinatorReport/<%= coordinator._id %>"
-          class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm h-64 flex flex-col items-center justify-center text-center hover:shadow-xl transition duration-300"
-        >
-          <div class="relative">
-            <img
-              src="<%= coordinator.picture.path %>"
-              alt="<%= coordinator.picture.fieldname %>"
-              class="w-24 h-24 rounded-full mx-auto object-cover"
-            />
-            <span
-              class="absolute bottom-2 right-2 bg-green-500 h-5 w-5 rounded-full border-2 border-white"
-            ></span>
-          </div>
-          <h2 class="text-base sm:text-lg font-semibold mt-4">
-            <%= coordinator.username %>
-          </h2>
-        </a>
-        <% }); %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
+        <% currUser.coordinators.forEach(coordinator=> { %>
+          <a href="/head/coordinatorReport/<%= coordinator._id %>"
+            class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm h-64 flex flex-col items-center justify-center text-center hover:shadow-xl transition duration-300">
+            <div class="relative">
+              <img src="<%= coordinator.picture.path %>" alt="<%= coordinator.picture.fieldname %>"
+                class="w-24 h-24 rounded-full mx-auto object-cover" />
+              <span class="absolute bottom-2 right-2 bg-green-500 h-5 w-5 rounded-full border-2 border-white"></span>
+            </div>
+            <h2 class="text-base sm:text-lg font-semibold mt-4">
+              <%= coordinator.username %>
+            </h2>
+          </a>
+          <% }); %>
       </div>
     </div>
-  </body>
+
+    <div class="mt-6 text-center">
+      <a href="/head/export-daily-reports"
+        class="px-3 py-1 sm:px-4 sm:py-2 bg-green-500 text-white hover:bg-green-600 rounded-md">
+        <%= __('Export Report') %>
+      </a>
+      <br><br>
+      <a href="/head/export-all-reports"
+        class="px-3 py-1 sm:px-4 sm:py-2 bg-green-500 text-white hover:bg-green-600 rounded-md">
+        <%= __('Export All Report') %>
+      </a>
+    </div>
+</body>
+
 </html>

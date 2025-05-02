@@ -3,7 +3,7 @@
     <!-- LEFT: Logo + Links (Desktop only) -->
     <div class="flex items-center gap-6 flex-1">
       <!-- Logo -->
-      <img src="/images/logo2.jpg" alt="Signal Shala" class="h-8 sm:h-10" />
+      <img src="/images/WhatsApp Image 2025-04-30 at 18.07.19_34492076.jpg" alt="Signal Shala" class="h-8 sm:h-10" />
 
       <!-- Desktop Nav Links -->
       <div class="hidden md:flex gap-3 sm:gap-4">
@@ -14,9 +14,6 @@
           </a>
           <a href="/head/addCoordinator" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
             <%= __('Add Coordinator') %>
-          </a>
-          <a href="/head/export-reports" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
-            <%= __('Export Report') %>
           </a>
           <% if (currentPage==="coordinatorReport" ) { %>
             <button onclick="confirmDeleteCoord('<%= currCoord._id %>')"
@@ -84,9 +81,6 @@
         </a>
         <a href="/head/addCoordinator" class="px-3 py-1 hover:bg-red-600 rounded-md">
           <%= __('Add Coordinator') %>
-        </a>
-        <a href="/head/export-reports" class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-red-600 rounded-md">
-          <%= __('Export Report') %>
         </a>
         <% if (currentPage==="coordinatorReport" ) { %>
           <button onclick="confirmDeleteCoord('<%= currCoord._id %>')"
