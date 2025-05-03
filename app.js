@@ -64,6 +64,7 @@ const store = MongoStore.create({
     secret: process.env.SECRET,
   },
   touchAfter: 24 * 3600,
+  ttl: 600, 
 });
 
 const retryConnection = () => {
