@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Attendance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50"
+  >
+    <%- include("../partials/navbar", currUser) %>
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">My Attendance</h1>
+        <p class="text-gray-600">
+          Upload your daily geotagged photo to mark attendance
+        </p>
+      </div>
+
+      <!-- Attendance Stats -->
+      <div
+        class="bg-white rounded-2xl shadow-md p-6 mb-8 border border-gray-100"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium mb-1">
+              Total Attendance
+            </p>
+            <h2 class="text-4xl font-bold text-green-600">
+              <%= attendanceCount %> / <%= totalDays %>
+            </h2>
+            <p class="text-xs text-gray-400 mt-1">days present</p>
+          </div>
+          <div class="bg-green-100 p-4 rounded-full">
+            <svg
+              class="w-12 h-12 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Photo Section -->
+      <div
+        class="bg-white rounded-2xl shadow-md p-6 mb-8 border border-gray-100"
+      >
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">
+          Upload Today's Attendance Photo
+        </h2>
+
+        <form
+          action="/teacher/attendance/upload"
+          method="POST"
+          enctype="multipart/form-data"
+          id="attendanceForm"
+        >
+          <div class="mb-6">
+            <label
+              for="attendancePhoto"
+              class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-500 transition-colors duration-300 bg-gray-50 hover:bg-blue-50"
+            >
+              <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg
+                  class="w-12 h-12 text-gray-400 mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
+                </svg>
+                <p class="mb-2 text-sm text-gray-700">
+                  <span class="font-semibold"
+                    >📸 Click to capture photo with camera</span
+                  >
+                </p>
+                <p class="text-xs text-red-600 font-semibold mb-1">
+                  ⚠️ Camera only - Gallery uploads not allowed
+                </p>
+                <p class="text-xs text-gray-500">
+                  Take a fresh geotagged photo to mark attendance
+                </p>
+                <p
+                  id="fileName"
+                  class="text-sm text-blue-600 font-semibold mt-2 hidden"
+                ></p>
+              </div>
+              <input
+                id="attendancePhoto"
+                name="attendancePhoto"
+                type="file"
+                class="hidden"
+                accept="image/*"
+                capture="environment"
+                required
+              />
+            </label>
+          </div>
+
+          <div class="text-center">
+            <button
+              type="submit"
+              class="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition-colors duration-300 font-semibold shadow-md hover:shadow-lg"
+              id="submitBtn"
+            >
+              Upload Attendance Photo
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Attendance History -->
+      <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">
+          Attendance History
+        </h2>
+
+        <% if (attendancePhotos && attendancePhotos.length > 0) { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <% attendancePhotos.forEach(photo => { %>
+          <div
+            class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300"
+          >
+            <div
+              class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-3"
+            >
+              <p class="font-semibold text-center">
+                <%= new Date(photo.date).toLocaleDateString('en-IN', { weekday:
+                'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+              </p>
+              <p class="text-xs text-center text-blue-100 mt-1">
+                <%= new Date(photo.date).toLocaleTimeString('en-IN', { hour:
+                '2-digit', minute: '2-digit' }) %>
+              </p>
+            </div>
+            <div class="p-2">
+              <img
+                src="<%= photo.photo.path %>"
+                alt="Attendance photo"
+                class="w-full h-64 object-cover rounded-lg"
+              />
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <div class="text-center py-12">
+          <svg
+            class="w-16 h-16 text-gray-300 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            ></path>
+          </svg>
+          <p class="text-gray-500 text-lg">No attendance photos yet</p>
+          <p class="text-gray-400 text-sm mt-2">
+            Upload your first photo to start tracking attendance
+          </p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <script>
+      // File input preview
+      const photoInput = document.getElementById("attendancePhoto");
+      const fileName = document.getElementById("fileName");
+
+      photoInput.addEventListener("change", function (e) {
+        if (e.target.files && e.target.files[0]) {
+          fileName.textContent = e.target.files[0].name;
+          fileName.classList.remove("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>

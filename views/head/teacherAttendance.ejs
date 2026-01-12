@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Statistics - <%= teacher.username %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50"
+  >
+    <%- include("../partials/navbar.ejs", {currUser, currCoord, currentPage}) %>
+
+    <div class="container mx-auto px-4 py-8">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+          Attendance Statistics - <%= teacher.username %>
+        </h1>
+        <p class="text-gray-600">Teacher and student attendance overview</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Teacher Attendance -->
+        <a
+          href="/head/teacherAttendance/<%= teacher._id %>/photos"
+          class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 block hover:shadow-xl hover:border-blue-200 transition-all"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-600">
+              Teacher Attendance
+            </h3>
+            <svg
+              class="w-8 h-8 text-blue-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              ></path>
+            </svg>
+          </div>
+          <div class="text-3xl font-bold text-gray-800 mb-2">
+            <%= teacherAttendance.present %> / <%= teacherAttendance.total %>
+          </div>
+          <p class="text-sm text-gray-500">days present</p>
+        </a>
+
+        <!-- Total Students -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-600">Total Students</h3>
+            <svg
+              class="w-8 h-8 text-green-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              ></path>
+            </svg>
+          </div>
+          <div class="text-3xl font-bold text-gray-800 mb-2">
+            <%= studentAttendanceData.length %>
+          </div>
+          <p class="text-sm text-gray-500">Enrolled students</p>
+        </div>
+
+        <!-- Total Lectures -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-600">Total Lectures</h3>
+            <svg
+              class="w-8 h-8 text-purple-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+          <div class="text-3xl font-bold text-gray-800 mb-2">
+            <%= reports.length %>
+          </div>
+          <p class="text-sm text-gray-500">Reports submitted</p>
+        </div>
+      </div>
+
+      <!-- Student Attendance Table -->
+      <div
+        class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
+      >
+        <div class="p-6 border-b border-gray-100">
+          <h2 class="text-xl font-bold text-gray-800">Student Attendance</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  Student Name
+                </th>
+                <th
+                  class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  Total Classes
+                </th>
+                <th
+                  class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  Present
+                </th>
+                <th
+                  class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  Attendance %
+                </th>
+                <th
+                  class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                >
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <% studentAttendanceData.forEach((data) => { %>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="flex items-center">
+                    <div
+                      class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold"
+                    >
+                      <%= data.student.name.charAt(0).toUpperCase() %>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= data.student.name %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-center text-sm text-gray-700">
+                  <%= data.totalClasses %>
+                </td>
+                <td class="px-6 py-4 text-center text-sm text-gray-700">
+                  <%= data.presentCount %>
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <span class="text-lg font-bold text-gray-800">
+                    <%= data.percentage %>%
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <% if (parseFloat(data.percentage) >= 75) { %>
+                  <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                  >
+                    Excellent
+                  </span>
+                  <% } else if (parseFloat(data.percentage) >= 50) { %>
+                  <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+                  >
+                    Average
+                  </span>
+                  <% } else { %>
+                  <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                  >
+                    Low
+                  </span>
+                  <% } %>
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

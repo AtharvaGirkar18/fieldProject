@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teachers under <%= coordinator.username %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50"
+  >
+    <%- include("../partials/navbar", {currUser, currCoord, currentPage}) %>
+
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">
+          Check Attendance Statistics
+        </h1>
+        <p class="text-gray-600 text-lg">
+          Teachers under <%= coordinator.username %>
+        </p>
+      </div>
+
+      <!-- Teachers Grid -->
+      <% if (coordinator.teachers && coordinator.teachers.length > 0) { %>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
+        <% coordinator.teachers.forEach(teacher => { %>
+        <a
+          href="/head/teacherAttendance/<%= teacher._id %>"
+          class="group bg-white rounded-2xl shadow-md hover:shadow-2xl p-6 transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+        >
+          <div class="flex flex-col items-center">
+            <div class="relative mb-4">
+              <img
+                src="<%= teacher.picture.path %>"
+                alt="<%= teacher.picture.fieldname %>"
+                class="w-24 h-24 rounded-full object-cover border-4 border-blue-100 group-hover:border-blue-300 transition-all"
+              />
+              <span
+                class="absolute bottom-1 right-1 bg-green-500 h-4 w-4 rounded-full border-2 border-white"
+              ></span>
+            </div>
+            <h2
+              class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors"
+            >
+              <%= teacher.username %>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Teacher</p>
+            <div class="mt-4 flex items-center gap-2 text-sm text-blue-600">
+              <span>View Attendance</span>
+              <svg
+                class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </a>
+        <% }); %>
+      </div>
+      <% } else { %>
+      <div class="text-center py-12">
+        <p class="text-gray-500 text-lg">
+          No teachers assigned to this coordinator yet.
+        </p>
+      </div>
+      <% } %>
+    </div>
+  </body>
+</html>

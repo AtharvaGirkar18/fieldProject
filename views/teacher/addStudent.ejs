@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Student</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-sky-50 py-10 px-4"
+  >
+    <div class="max-w-xl mx-auto">
+      <div
+        class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6 flex items-center gap-4"
+      >
+        <img
+          src="<%= path %>"
+          alt="Profile"
+          class="w-14 h-14 rounded-full border-4 border-emerald-100 object-cover"
+        />
+        <div>
+          <p class="text-sm text-gray-500">Signed in as</p>
+          <h1 class="text-xl font-bold text-gray-900"><%= username %></h1>
+          <p class="text-sm text-gray-500">Add students to track attendance</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <form action="/teacher/add-student" method="POST" class="space-y-4">
+          <div>
+            <label
+              for="name"
+              class="block text-sm font-semibold text-gray-700 mb-2"
+              >Student Name</label
+            >
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Enter full name"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-emerald-600 to-sky-600 text-white font-semibold py-3 rounded-xl shadow hover:from-emerald-700 hover:to-sky-700 transition"
+          >
+            Add Student
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

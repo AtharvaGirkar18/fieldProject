@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= __('coordinatorReportTitle') %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <%- include("../partials/navbar", currUser) %>
+
+    <div class="container mx-auto px-4 py-6">
+      <% if(currUser.coordReport && currUser.coordReport.teacherReports.length
+      !== 0 && currUser.coordReport.date !== null) { %>
+      <div class="text-center">
+        <h1 class="text-xl sm:text-2xl font-bold text-red-600 mb-2">
+          <%= __('todaysReport') %>
+        </h1>
+        <h2 class="text-lg sm:text-2xl font-bold text-red-600 mb-6">
+          <%= currUser.coordReport.date.toDateString() %>
+        </h2>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table
+          class="min-w-full border-collapse border border-gray-300 text-sm sm:text-base"
+        >
+          <thead>
+            <tr class="bg-gray-200">
+              <th
+                class="p-2 border border-gray-300 text-left whitespace-nowrap"
+              >
+                <%= __('srNo') %>
+              </th>
+              <th
+                class="p-2 border border-gray-300 text-left whitespace-nowrap"
+              >
+                <%= __('teacherName') %>
+              </th>
+              <th
+                class="p-2 border border-gray-300 text-left whitespace-nowrap"
+              >
+                <%= __('date') %>
+              </th>
+              <th
+                class="p-2 border border-gray-300 text-left whitespace-nowrap"
+              >
+                <%= __('address') %>
+              </th>
+              <th
+                class="p-2 border border-gray-300 text-left whitespace-nowrap"
+              >
+                <%= __('numStudents') %>
+              </th>
+              <th
+                class="p-2 border border-gray-300 text-left whitespace-nowrap"
+              >
+                <%= __('entireReport') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% currUser.coordReport.teacherReports.forEach((lecture, index) => {
+            %> <% if (lecture.tReportId) { %>
+            <tr class="border-b">
+              <td class="p-2 border border-gray-300 text-center">
+                <%= index + 1 %>
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <%= lecture.teacher_name %>
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <%= new Date(lecture.tReportId.date).toDateString() %>
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <%= lecture.tReportId.address %>
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <%= lecture.tReportId.attendanceCount ||
+                lecture.tReportId.attendance || 0 %>
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <a
+                  href="/coordinator/lectureDetails/<%= lecture.tReportId._id %>"
+                  class="text-blue-500 hover:underline"
+                  >✏️ <%= __('link') %></a
+                >
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <form action="/coordinator/removereport/<%= lecture._id %>">
+                  <button
+                    type="submit"
+                    class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-300 text-sm"
+                  >
+                    X
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% } %> <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-center mt-6">
+        <form action="/coordinator/createCoordinatorReport" method="get">
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 text-sm sm:text-base"
+          >
+            <%= __('reportToHead') %>
+          </button>
+        </form>
+      </div>
+      <% } else { %>
+      <h2 class="text-xl sm:text-2xl font-bold text-center text-red-600 mt-48">
+        <%= __('reportEmpty') %>
+      </h2>
+      <% } %>
+    </div>
+  </body>
+</html>

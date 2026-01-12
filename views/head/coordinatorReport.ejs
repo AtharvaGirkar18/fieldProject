@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= __('coordinatorReportTitle') %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <%- include("../partials/navbar", {currUser, currCoord, currentPage}) %>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <!-- Coordinator Attendance Card -->
+      <a
+        href="/head/coordinatorReport/<%= currCoord._id %>/photos"
+        class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 mb-8 max-w-md mx-auto block hover:shadow-xl hover:border-blue-200 transition-all"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-semibold text-gray-600">
+            Coordinator Attendance
+          </h3>
+          <svg
+            class="w-8 h-8 text-blue-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
+          </svg>
+        </div>
+        <div class="text-3xl font-bold text-gray-800 mb-2">
+          <%= coordinatorAttendance.present %> / <%= coordinatorAttendance.total
+          %>
+        </div>
+        <p class="text-sm text-gray-500">days present</p>
+      </a>
+
+      <h1 class="text-xl sm:text-2xl font-bold text-center text-red-600 mb-6">
+        <%= __('reportsBy') %> <%= currCoord.username %>
+      </h1>
+
+      <% coordReports.slice().reverse().forEach((coordReport, index) => { %>
+      <h2
+        class="text-lg sm:text-2xl font-bold text-center text-green-600 mt-4 sm:mt-6"
+      >
+        <% const dateStr = coordReport.date.toDateString().split(" ").slice(0,
+        4).join(" "); %> <%= __('date') %>: <%= dateStr %>
+      </h2>
+
+      <div class="overflow-x-auto">
+        <table
+          class="min-w-full border-collapse border border-gray-300 text-sm sm:text-base"
+        >
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('srNo') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('teacherName') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('date') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('address') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('noOfStudents') %>
+              </th>
+              <th class="p-2 border border-gray-300 text-left">
+                <%= __('entireReport') %>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% coordReport.teacherReports.forEach((lecture, index) => { %>
+            <tr class="border-b">
+              <td class="p-2 border border-gray-300"><%= index + 1 %></td>
+              <td class="p-2 border border-gray-300">
+                <%= lecture.teacher.username %>
+              </td>
+              <td class="p-2 border border-gray-300">
+                <%= lecture.date.toDateString().split(" ").slice(0, 4).join(" ")
+                %>
+              </td>
+              <td class="p-2 border border-gray-300"><%= lecture.address %></td>
+              <td class="p-2 border border-gray-300">
+                <%= lecture.attendance %>
+              </td>
+              <td class="p-2 border border-gray-300 text-center">
+                <a
+                  href="/head/lectureDetails/<%= lecture._id %>"
+                  class="text-blue-500 hover:underline"
+                  >✏️ <%= __('link') %></a
+                >
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% }) %>
+    </div>
+  </body>
+</html>
