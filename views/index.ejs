@@ -1,218 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome | Vasti Vikas Prakalp</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome | Vasti Vikas Prakalp</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+      rel="stylesheet"
+    />
 
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: url("/images/bg.jpg") no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+        color: #333;
+        text-align: center;
+      }
 
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: url("/images/bg.jpg") no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      justify-content: center;
-      align-items: center;
-      color: #333;
-      text-align: center;
-    }
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.85);
+        z-index: 0;
+      }
 
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.85);
-      z-index: 0;
-    }
+      .main-background {
+        background: url("/images/background1.jpg") no-repeat center top;
+        background-size: cover;
+        background-attachment: fixed;
+        width: 100%;
+        padding-top: 40px;
+        padding-bottom: 60px;
+        position: relative;
+        z-index: 1;
+      }
 
-    .main-background {
-      background: url("/images/background1.jpg") no-repeat center top;
-      background-size: cover;
-      background-attachment: fixed;
-      width: 100%;
-      padding-top: 40px;
-      padding-bottom: 60px;
-      position: relative;
-      z-index: 1;
-    }
+      .main-content {
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+        z-index: 2;
+        position: relative;
+      }
 
-    .main-content {
-      width: 100%;
-      max-width: 400px;
-      margin: auto;
-      z-index: 2;
-      position: relative;
-    }
+      .logo {
+        width: 150px;
+        margin: 0 auto 20px;
+      }
 
-    .logo {
-      width: 150px;
-      margin: 0 auto 20px;
-    }
-
-    .container {
-      background: white;
-      padding: 30px 20px;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-      position: relative;
-    }
-
-    h2 {
-      color: #5a50ea;
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      background: #246bfd;
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .btn:hover {
-      background: #1a5cdc;
-    }
-
-    .about {
-      max-width: 700px;
-      margin: 40px auto 20px;
-      padding: 30px;
-      font-size: 17px;
-      line-height: 1.6;
-      color: #333;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      z-index: 2;
-      position: relative;
-    }
-
-    .about p {
-      color: #333;
-      text-align: justify;
-      margin-top: 15px;
-    }
-
-    .about a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .gallery-section {
-      max-width: 700px;
-      width: 90%;
-      margin: 60px auto 20px;
-      z-index: 1;
-      position: relative;
-    }
-
-    .gallery-image {
-      width: 100%;
-      height: auto;
-      border-radius: 15px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      margin-bottom: 40px;
-    }
-
-    @media (max-width: 500px) {
       .container {
-        padding: 20px 15px;
+        background: white;
+        padding: 30px 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        position: relative;
+      }
+
+      h2 {
+        color: #5a50ea;
+        margin-bottom: 20px;
+        font-size: 24px;
       }
 
       .btn {
-        font-size: 16px;
-        padding: 12px;
+        display: block;
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        background: #246bfd;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #1a5cdc;
       }
 
       .about {
-        font-size: 15px;
+        max-width: 700px;
+        margin: 40px auto 20px;
+        padding: 30px;
+        font-size: 17px;
+        line-height: 1.6;
+        color: #333;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        z-index: 2;
+        position: relative;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <div class="overlay"></div>
+      .about p {
+        color: #333;
+        text-align: justify;
+        margin-top: 15px;
+      }
 
-  <div class="main-background">
-    <div class="main-content">
-      <img src="/images/Screenshot 2025-04-30 180806.png" alt="Signal Shala Logo" class="logo" />
+      .about a {
+        color: inherit;
+        text-decoration: none;
+      }
 
-      <!-- Login Card -->
-      <div class="container">
-        <form action="/set-language" method="POST" style="position: absolute; top: 15px; right: 20px">
+      .gallery-section {
+        max-width: 700px;
+        width: 90%;
+        margin: 60px auto 20px;
+        z-index: 1;
+        position: relative;
+      }
+
+      .gallery-image {
+        width: 100%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        margin-bottom: 40px;
+      }
+
+      @media (max-width: 500px) {
+        .container {
+          padding: 20px 15px;
+        }
+
+        .btn {
+          font-size: 16px;
+          padding: 12px;
+        }
+
+        .about {
+          font-size: 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="overlay"></div>
+
+    <div class="main-background">
+      <div class="main-content">
+        <img
+          src="/images/Screenshot 2025-04-30 180806.png"
+          alt="Signal Shala Logo"
+          class="logo"
+        />
+
+        <!-- Login Card -->
+        <div class="container">
+          <!-- Language selector hidden -->
+          <!-- <form action="/set-language" method="POST" style="position: absolute; top: 15px; right: 20px">
           <select name="lang" onchange="this.form.submit()" style="padding: 5px; border-radius: 6px">
             <option value="en" <%=locale==='en' ? 'selected' : '' %>>English</option>
             <option value="hi" <%=locale==='hi' ? 'selected' : '' %>>हिन्दी</option>
           </select>
-        </form>
+        </form> -->
 
-        <h2>
-          <%= __("loginAs") %>
-        </h2>
-        <a href="/auth/login/teacher" class="btn">
-          <%= __("teacher") %>
-        </a>
-        <a href="/auth/login/coordinator" class="btn">
-          <%= __("coordinator") %>
-        </a>
-        <a href="/auth/login/head" class="btn">
-          <%= __("head") %>
-        </a>
-      </div>
+          <h2><%= __("loginAs") %></h2>
+          <a href="/auth/login/teacher" class="btn"> <%= __("teacher") %> </a>
+          <a href="/auth/login/coordinator" class="btn">
+            <%= __("coordinator") %>
+          </a>
+          <a href="/auth/login/head" class="btn"> <%= __("head") %> </a>
+        </div>
 
-      <div class="about">
-        <h2 style="color: #ec4141; margin-bottom: 10px">
-          <%= __("Vasti Vikas Prakalp") %>
-        </h2>
-        <h3 style="color: #0c0c0c; margin-bottom: 10px">
-          <%= __("Run by Samarth Bharat Vyaspeeth") %>
-        </h3>
-        <p>
-          <%= __("about") %>
-        </p>
+        <div class="about">
+          <h2 style="color: #ec4141; margin-bottom: 10px">
+            <%= __("Vasti Vikas Prakalp") %>
+          </h2>
+          <h3 style="color: #0c0c0c; margin-bottom: 10px">
+            <%= __("Run by Samarth Bharat Vyaspeeth") %>
+          </h3>
+          <p><%= __("about") %></p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="gallery-section">
-    <img src="/images/img1.jpg" class="gallery-image" data-aos="fade-up" />
-    <img src="/images/img2.jpg" class="gallery-image" data-aos="fade-up" data-aos-delay="100" />
-    <img src="/images/img3.jpg" class="gallery-image" data-aos="fade-up" data-aos-delay="200" />
-    <img src="/images/img4.jpg" class="gallery-image" data-aos="fade-up" data-aos-delay="300" />
-    <img src="/images/img5.jpg" class="gallery-image" data-aos="fade-up" data-aos-delay="400" />
-    <img src="/images/img6.jpg" class="gallery-image" data-aos="fade-up" data-aos-delay="500" />
-  </div>
+    <div class="gallery-section">
+      <img src="/images/img1.jpg" class="gallery-image" data-aos="fade-up" />
+      <img
+        src="/images/img2.jpg"
+        class="gallery-image"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      />
+      <img
+        src="/images/img3.jpg"
+        class="gallery-image"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      />
+      <img
+        src="/images/img4.jpg"
+        class="gallery-image"
+        data-aos="fade-up"
+        data-aos-delay="300"
+      />
+      <img
+        src="/images/img5.jpg"
+        class="gallery-image"
+        data-aos="fade-up"
+        data-aos-delay="400"
+      />
+      <img
+        src="/images/img6.jpg"
+        class="gallery-image"
+        data-aos="fade-up"
+        data-aos-delay="500"
+      />
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    AOS.init({
-      duration: 1000,
-      once: true,
-    });
-  </script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+    </script>
+  </body>
 </html>

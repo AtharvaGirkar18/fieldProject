@@ -1,70 +1,109 @@
-<nav class="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 text-white shadow-lg">
+<nav
+  class="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 text-white shadow-lg"
+>
   <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap">
     <!-- LEFT: Logo + Links (Desktop only) -->
     <div class="flex items-center gap-6 flex-1">
       <!-- Logo -->
-      <img src="/images/WhatsApp Image 2025-04-30 at 18.07.19_34492076.jpg" alt="Signal Shala" class="h-10 sm:h-12 rounded-lg shadow-md" />
+      <img
+        src="/images/WhatsApp Image 2025-04-30 at 18.07.19_34492076.jpg"
+        alt="Signal Shala"
+        class="h-10 sm:h-12 rounded-lg shadow-md"
+      />
 
       <!-- Desktop Nav Links -->
       <div class="hidden md:flex gap-2">
-        <%
-          const userRole = currUser.constructor.modelName;
-          const coordPages = ['coordinatorReport', 'coordinatorTeachers', 'teacherAttendance'];
-          const isCoordPage = coordPages.includes(currentPage) && typeof currCoord !== 'undefined';
-          if (userRole === 'Head') {
-        %>
-          <a href="/head/headHome" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Home") %>
-          </a>
-          <% if (isCoordPage) { %>
-            <a href="/head/coordinatorTeachers/<%= currCoord._id %>" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-              Teachers
-            </a>
-          <% } %>
-          <a href="/head/addCoordinator" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Add Coordinator") %>
-          </a>
-          <% if (isCoordPage) { %>
-            <button onclick="confirmDeleteCoord('<%= currCoord._id %>')"
-              class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-              <%= __("Delete Coordinator") %>
-            </button>
-          <% } %>
-        <% } else if (userRole === 'Coordinator') { %>
-          <a href="/coordinator/coordHome" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Home") %>
-          </a>
-          <a href="/coordinator/addTeacher" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Add Teacher") %>
-          </a>
-          <% if (typeof teacher !== 'undefined') { %>
-            <a href="/coordinator/attendance/<%= teacher._id %>" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-              Attendance statistics
-            </a>
-          <% } %>
-          <a href="/coordinator/report" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Report") %>
-          </a>
-          <% if (currentPage==="teacherDetails" && typeof teacher !== 'undefined') { %>
-            <button onclick="confirmDeleteTeacher('<%= teacher._id %>')"
-              class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-              <%= __("Delete Teacher") %>
-            </button>
-            <a href="/coordinator/assign/<%= teacher._id %>"
-              class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-              <%= __("Assign Teacher") %>
-            </a>
-          <% } %>
-        <% } else if (userRole === 'Teacher') { %>
-          <a href="/teacher/home" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Home") %>
-          </a>
-          <a href="/teacher/addStudent" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Add Student") %>
-          </a>
-          <a href="/teacher/report" class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium">
-            <%= __("Report") %>
-          </a>
+        <% const userRole = currUser.constructor.modelName; const coordPages =
+        ['coordinatorReport', 'coordinatorTeachers', 'teacherAttendance']; const
+        isCoordPage = coordPages.includes(currentPage) && typeof currCoord !==
+        'undefined'; if (userRole === 'Head') { %>
+        <a
+          href="/head/headHome"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Home") %>
+        </a>
+        <% if (isCoordPage) { %>
+        <a
+          href="/head/coordinatorTeachers/<%= currCoord._id %>"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          Teachers
+        </a>
+        <% } %>
+        <a
+          href="/head/addCoordinator"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Add Coordinator") %>
+        </a>
+        <% if (isCoordPage) { %>
+        <button
+          onclick="confirmDeleteCoord('<%= currCoord._id %>')"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Delete Coordinator") %>
+        </button>
+        <% } %> <% } else if (userRole === 'Coordinator') { %>
+        <a
+          href="/coordinator/coordHome"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Home") %>
+        </a>
+        <a
+          href="/coordinator/addTeacher"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Add Teacher") %>
+        </a>
+        <% if (typeof teacher !== 'undefined') { %>
+        <a
+          href="/coordinator/attendance/<%= teacher._id %>"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          Attendance statistics
+        </a>
+        <% } %>
+        <a
+          href="/coordinator/report"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Report") %>
+        </a>
+        <% if (currentPage==="teacherDetails" && typeof teacher !== 'undefined')
+        { %>
+        <button
+          onclick="confirmDeleteTeacher('<%= teacher._id %>')"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Delete Teacher") %>
+        </button>
+        <a
+          href="/coordinator/assign/<%= teacher._id %>"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Assign Teacher") %>
+        </a>
+        <% } %> <% } else if (userRole === 'Teacher') { %>
+        <a
+          href="/teacher/home"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Home") %>
+        </a>
+        <a
+          href="/teacher/addStudent"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Add Student") %>
+        </a>
+        <a
+          href="/teacher/report"
+          class="px-4 py-2 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+        >
+          <%= __("Report") %>
+        </a>
         <% } %>
       </div>
     </div>
@@ -73,28 +112,66 @@
     <div class="flex items-center gap-3">
       <!-- Desktop Profile Dropdown -->
       <div class="hidden md:block relative">
-        <button onclick="toggleProfileDropdown()" class="flex items-center gap-2 focus:outline-none hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200">
-          <img src="<%= currUser.picture.path %>" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white shadow-lg object-cover" />
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        <button
+          onclick="toggleProfileDropdown()"
+          class="flex items-center gap-2 focus:outline-none hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200"
+        >
+          <img
+            src="<%= currUser.picture.path %>"
+            alt="Profile"
+            class="w-10 h-10 rounded-full border-2 border-white shadow-lg object-cover"
+          />
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
           </svg>
         </button>
-        
+
         <!-- Dropdown Menu -->
-        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100">
+        <div
+          id="profileDropdown"
+          class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100"
+        >
           <div class="px-4 py-3 border-b border-gray-200">
-            <p class="text-sm font-bold text-gray-800"><%= currUser.username %></p>
-            <p class="text-xs text-gray-500 mt-0.5"><%= __("Account Settings") %></p>
+            <p class="text-sm font-bold text-gray-800">
+              <%= currUser.username %>
+            </p>
+            <p class="text-xs text-gray-500 mt-0.5">
+              <%= __("Account Settings") %>
+            </p>
           </div>
-          
-          <a href="/account/settings" class="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-blue-50 transition-colors">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+
+          <a
+            href="/account/settings"
+            class="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-blue-50 transition-colors"
+          >
+            <svg
+              class="w-5 h-5 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              ></path>
             </svg>
             <span class="text-sm font-medium"><%= __("Update Account") %></span>
           </a>
-          
-          <form action="/set-language" method="POST" class="border-t border-gray-200">
+
+          <!-- Language selector hidden -->
+          <!-- <form action="/set-language" method="POST" class="border-t border-gray-200">
             <div class="px-4 py-2.5">
               <label class="flex items-center gap-3 text-gray-700 text-sm cursor-pointer">
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,12 +183,25 @@
                 </select>
               </label>
             </div>
-          </form>
-          
+          </form> -->
+
           <div class="border-t border-gray-200">
-            <a href="/auth/logout" class="flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            <a
+              href="/auth/logout"
+              class="flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                ></path>
               </svg>
               <span class="text-sm font-medium"><%= __("Logout") %></span>
             </a>
@@ -121,90 +211,160 @@
 
       <!-- Mobile Hamburger -->
       <div class="md:hidden">
-        <button onclick="toggleMenu()" class="focus:outline-none p-2 hover:bg-white/10 rounded-lg transition-all">
-          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <button
+          onclick="toggleMenu()"
+          class="focus:outline-none p-2 hover:bg-white/10 rounded-lg transition-all"
+        >
+          <svg
+            class="h-6 w-6 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
       </div>
     </div>
 
     <!-- ✅ MOBILE MENU -->
-    <div id="mobileMenu" class="hidden md:hidden w-full mt-4 flex flex-col gap-2">
+    <div
+      id="mobileMenu"
+      class="hidden md:hidden w-full mt-4 flex flex-col gap-2"
+    >
       <% if (userRole === 'Head') { %>
-        <a href="/head/headHome" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Home") %>
-        </a>
-        <% if (isCoordPage) { %>
-          <a href="/head/coordinatorTeachers/<%= currCoord._id %>" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-            Teachers
-          </a>
-        <% } %>
-        <a href="/head/addCoordinator" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Add Coordinator") %>
-        </a>
-        <% if (isCoordPage) { %>
-          <button onclick="confirmDeleteCoord('<%= currCoord._id %>')"
-            class="px-4 py-2.5 hover:bg-white/10 rounded-lg w-full text-left transition-all font-medium">
-            <%= __("Delete Coordinator") %>
-          </button>
-        <% } %>
-      <% } else if (userRole === 'Coordinator') { %>
-        <a href="/coordinator/coordHome" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Home") %>
-        </a>
-        <a href="/coordinator/addTeacher" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Add Teacher") %>
-        </a>
-        <% if (typeof teacher !== 'undefined') { %>
-          <a href="/coordinator/attendance/<%= teacher._id %>" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-            Attendance statistics
-          </a>
-        <% } %>
-        <a href="/coordinator/report" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Report") %>
-        </a>
-        <% if (currentPage==="teacherDetails" && typeof teacher !== 'undefined') { %>
-          <button onclick="confirmDeleteTeacher('<%= teacher._id %>')"
-            class="px-4 py-2.5 hover:bg-white/10 rounded-lg w-full text-left transition-all font-medium">
-            <%= __("Delete Teacher") %>
-          </button>
-          <a href="/coordinator/assign/<%= teacher._id %>" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-            <%= __("Assign Teacher") %>
-          </a>
-        <% } %>
-      <% } else if (userRole === 'Teacher') { %>
-        <a href="/teacher/home" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Home") %>
-        </a>
-        <a href="/teacher/addStudent" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Add Student") %>
-        </a>
-        <a href="/teacher/report" class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium">
-          <%= __("Report") %>
-        </a>
+      <a
+        href="/head/headHome"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Home") %>
+      </a>
+      <% if (isCoordPage) { %>
+      <a
+        href="/head/coordinatorTeachers/<%= currCoord._id %>"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        Teachers
+      </a>
+      <% } %>
+      <a
+        href="/head/addCoordinator"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Add Coordinator") %>
+      </a>
+      <% if (isCoordPage) { %>
+      <button
+        onclick="confirmDeleteCoord('<%= currCoord._id %>')"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg w-full text-left transition-all font-medium"
+      >
+        <%= __("Delete Coordinator") %>
+      </button>
+      <% } %> <% } else if (userRole === 'Coordinator') { %>
+      <a
+        href="/coordinator/coordHome"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Home") %>
+      </a>
+      <a
+        href="/coordinator/addTeacher"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Add Teacher") %>
+      </a>
+      <% if (typeof teacher !== 'undefined') { %>
+      <a
+        href="/coordinator/attendance/<%= teacher._id %>"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        Attendance statistics
+      </a>
+      <% } %>
+      <a
+        href="/coordinator/report"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Report") %>
+      </a>
+      <% if (currentPage==="teacherDetails" && typeof teacher !== 'undefined') {
+      %>
+      <button
+        onclick="confirmDeleteTeacher('<%= teacher._id %>')"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg w-full text-left transition-all font-medium"
+      >
+        <%= __("Delete Teacher") %>
+      </button>
+      <a
+        href="/coordinator/assign/<%= teacher._id %>"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Assign Teacher") %>
+      </a>
+      <% } %> <% } else if (userRole === 'Teacher') { %>
+      <a
+        href="/teacher/home"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Home") %>
+      </a>
+      <a
+        href="/teacher/addStudent"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Add Student") %>
+      </a>
+      <a
+        href="/teacher/report"
+        class="px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all font-medium"
+      >
+        <%= __("Report") %>
+      </a>
       <% } %>
 
       <!-- Mobile Profile Section -->
       <div class="w-full border-t border-white/20 mt-2 pt-3">
-        <div class="flex items-center gap-3 px-4 py-2.5 bg-white/5 rounded-lg mb-2">
-          <img src="<%= currUser.picture.path %>" alt="Profile Picture"
-            class="w-12 h-12 rounded-full border-2 border-white shadow-lg object-cover" />
+        <div
+          class="flex items-center gap-3 px-4 py-2.5 bg-white/5 rounded-lg mb-2"
+        >
+          <img
+            src="<%= currUser.picture.path %>"
+            alt="Profile Picture"
+            class="w-12 h-12 rounded-full border-2 border-white shadow-lg object-cover"
+          />
           <div>
             <p class="text-sm font-bold"><%= currUser.username %></p>
             <p class="text-xs text-blue-100"><%= __("Account Settings") %></p>
           </div>
         </div>
-        
-        <a href="/account/settings" class="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+
+        <a
+          href="/account/settings"
+          class="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 rounded-lg transition-all"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
           </svg>
           <span class="text-sm font-medium"><%= __("Update Account") %></span>
         </a>
 
-        <!-- Language Selector (Mobile) -->
-        <form action="/set-language" method="POST" class="px-4 py-2.5">
+        <!-- Language Selector (Mobile) - HIDDEN -->
+        <!-- <form action="/set-language" method="POST" class="px-4 py-2.5">
           <label class="flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
@@ -215,11 +375,24 @@
               <option value="hi" <%=locale==="hi" ? "selected" : "" %>>हिंदी</option>
             </select>
           </label>
-        </form>
+        </form> -->
 
-        <a href="/auth/logout" class="flex items-center gap-3 px-4 py-2.5 text-red-200 hover:bg-red-700/30 rounded-lg transition-all">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+        <a
+          href="/auth/logout"
+          class="flex items-center gap-3 px-4 py-2.5 text-red-200 hover:bg-red-700/30 rounded-lg transition-all"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            ></path>
           </svg>
           <span class="text-sm font-medium"><%= __("Logout") %></span>
         </a>
@@ -243,7 +416,7 @@
   document.addEventListener('click', function(event) {
     const dropdown = document.getElementById("profileDropdown");
     const profileButton = event.target.closest('button[onclick="toggleProfileDropdown()"]');
-    
+
     if (!profileButton && dropdown && !dropdown.contains(event.target)) {
       dropdown.classList.add("hidden");
     }

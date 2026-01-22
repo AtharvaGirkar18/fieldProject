@@ -183,20 +183,16 @@ module.exports.renderAttendance = async (req, res) => {
         )
       : [];
 
-    // Calculate total days since last reset
+    // Calculate total days since last reset (using IST timezone)
     let totalDays = 0;
     if (coordinator && coordinator.lastReportClearDate) {
-      const resetDate = new Date(coordinator.lastReportClearDate);
-      resetDate.setHours(0, 0, 0, 0); // Start of reset day
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Start of today
+      const resetDate = getISTStartOfDay(coordinator.lastReportClearDate);
+      const today = getISTStartOfDay(new Date());
       const diffTime = today - resetDate;
       totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     } else if (teacher.lastAttendanceResetDate) {
-      const resetDate = new Date(teacher.lastAttendanceResetDate);
-      resetDate.setHours(0, 0, 0, 0); // Start of reset day
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Start of today
+      const resetDate = getISTStartOfDay(teacher.lastAttendanceResetDate);
+      const today = getISTStartOfDay(new Date());
       const diffTime = today - resetDate;
       totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     }
