@@ -39,6 +39,7 @@ const teacherSchema = new mongoose.Schema({
       location: {
         latitude: Number,
         longitude: Number,
+        address: String,
       },
     },
   ],

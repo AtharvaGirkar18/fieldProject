@@ -28,12 +28,19 @@ teacherRouter.get("/home", teacherController.renderHome);
 teacherRouter.get("/addStudent", teacherController.renderAddStudent);
 teacherRouter.post("/add-student", teacherController.addStudent);
 
+// Delete student routes
+teacherRouter.get("/deleteStudent", teacherController.renderDeleteStudent);
+teacherRouter.delete(
+  "/delete-student/:studentId",
+  teacherController.deleteStudent,
+);
+
 // Attendance routes
 teacherRouter.get("/attendance", teacherController.renderAttendance);
 teacherRouter.post(
   "/attendance/upload",
   attendanceUpload.single("attendancePhoto"),
-  teacherController.uploadAttendance
+  teacherController.uploadAttendance,
 );
 
 // Report routes
@@ -88,8 +95,8 @@ teacherRouter.post(
       const presentStudentIds = Array.isArray(studentAttendance)
         ? studentAttendance
         : studentAttendance
-        ? [studentAttendance]
-        : [];
+          ? [studentAttendance]
+          : [];
 
       // Create attendance records for all students
       teacher.students.forEach((student) => {
@@ -127,7 +134,7 @@ teacherRouter.post(
       console.error("Error submitting lecture report:", error);
       res.status(500).send("Error submitting report");
     }
-  }
+  },
 );
 
 module.exports = teacherRouter;

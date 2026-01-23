@@ -72,6 +72,10 @@ module.exports.renderHome = async (req, res) => {
     // Count attendance for each student
     reports.forEach((report) => {
       report.studentAttendance.forEach((attendance) => {
+        // Skip if student was deleted
+        if (!attendance.student) {
+          return;
+        }
         const studentId = attendance.student._id.toString();
         if (studentAttendanceMap[studentId]) {
           studentAttendanceMap[studentId].totalClasses++;
@@ -129,6 +133,19 @@ module.exports.addStudent = async (req, res) => {
     const { name } = req.body;
     const teacherId = req.user._id;
 
+    // Check current number of active students
+    const teacher = await Teacher.findById(teacherId).populate("students");
+    const activeStudentCount = teacher.students.filter(
+      (student) => student.active !== false,
+    ).length;
+
+    // Enforce 50 student limit
+    if (activeStudentCount >= 50) {
+      return res
+        .status(400)
+        .send("Maximum student limit reached. You can only have 50 students.");
+    }
+
     // Create new student
     const newStudent = new Student({
       name: name,
@@ -179,7 +196,7 @@ module.exports.renderAttendance = async (req, res) => {
     // Get attendance photos sorted by date (latest first)
     const attendancePhotos = teacher.attendancePhotos
       ? teacher.attendancePhotos.sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
+          (a, b) => new Date(b.date) - new Date(a.date),
         )
       : [];
 
@@ -213,6 +230,53 @@ module.exports.renderAttendance = async (req, res) => {
   }
 };
 
+// Helper function to reverse geocode coordinates to address
+const getAddressFromCoordinates = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+    );
+    const data = await response.json();
+
+    // Return address or coordinates if address not found
+    if (data.address) {
+      // Try to build a readable address with more precision
+      const addressParts = [];
+
+      // Add street-level details first (most specific)
+      if (data.address.house_number)
+        addressParts.push(data.address.house_number);
+      if (data.address.road) addressParts.push(data.address.road);
+      if (data.address.neighbourhood)
+        addressParts.push(data.address.neighbourhood);
+      if (data.address.suburb) addressParts.push(data.address.suburb);
+
+      // Then add area details
+      if (data.address.city) addressParts.push(data.address.city);
+      if (data.address.district && data.address.district !== data.address.city)
+        addressParts.push(data.address.district);
+      if (data.address.state) addressParts.push(data.address.state);
+      if (data.address.country) addressParts.push(data.address.country);
+
+      if (addressParts.length > 0) {
+        const readableAddress = addressParts.join(", ");
+        // If address is detailed enough, use it; otherwise append coordinates
+        if (addressParts.length > 2) {
+          return readableAddress;
+        } else {
+          // For addresses with few parts, add precise coordinates
+          return `${readableAddress} (${latitude.toFixed(6)}, ${longitude.toFixed(6)})`;
+        }
+      }
+    }
+    // Fallback to precise coordinates if no address found
+    return `Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+  } catch (error) {
+    console.error("Geocoding error:", error);
+    return `Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+  }
+};
+
 // Handle attendance photo upload
 module.exports.uploadAttendance = async (req, res) => {
   try {
@@ -221,6 +285,21 @@ module.exports.uploadAttendance = async (req, res) => {
     }
 
     const teacherId = req.user._id;
+    const { latitude, longitude } = req.body;
+
+    // Get human-readable address from coordinates
+    let location = null;
+    if (latitude && longitude) {
+      const address = await getAddressFromCoordinates(
+        parseFloat(latitude),
+        parseFloat(longitude),
+      );
+      location = {
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        address: address,
+      };
+    }
 
     const attendancePhoto = {
       date: new Date(),
@@ -228,6 +307,7 @@ module.exports.uploadAttendance = async (req, res) => {
         fieldname: req.file.fieldname,
         path: req.file.path,
       },
+      location: location,
     };
 
     await Teacher.findByIdAndUpdate(teacherId, {
@@ -238,5 +318,78 @@ module.exports.uploadAttendance = async (req, res) => {
   } catch (error) {
     console.error("Error uploading attendance:", error);
     res.status(500).send("Error uploading attendance");
+  }
+};
+
+// Render delete student page
+module.exports.renderDeleteStudent = async (req, res) => {
+  try {
+    const teacher = await Teacher.findById(req.user._id).populate("students");
+
+    // Filter out students that are marked as deleted (active: false)
+    const activeStudents = teacher.students.filter(
+      (student) => student.active !== false,
+    );
+
+    res.render("teacher/deleteStudent", {
+      currUser: req.user,
+      username: req.user.username,
+      path: req.user.picture.path,
+      currentPage: "deleteStudent",
+      locale: req.cookies.locale || "en",
+      students: activeStudents,
+    });
+  } catch (error) {
+    console.error("Error loading delete student page:", error);
+    res.status(500).send("Error loading page");
+  }
+};
+
+// Handle student deletion (soft delete with 30-day cleanup)
+module.exports.deleteStudent = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const teacherId = req.user._id;
+
+    // Soft delete - mark student as inactive and record deletion date
+    await Student.findByIdAndUpdate(studentId, {
+      active: false,
+      deletedAt: new Date(),
+    });
+
+    // Remove student from teacher's active students array
+    await Teacher.findByIdAndUpdate(teacherId, {
+      $pull: { students: studentId },
+    });
+
+    // Clean up students deleted more than 30 days ago
+    await cleanupOldDeletedStudents();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    res.status(500).json({ success: false, error: "Error deleting student" });
+  }
+};
+
+// Helper function to permanently delete students after 30 days
+const cleanupOldDeletedStudents = async () => {
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    // Find and delete students that were marked deleted more than 30 days ago
+    const result = await Student.deleteMany({
+      active: false,
+      deletedAt: { $lte: thirtyDaysAgo, $ne: null },
+    });
+
+    if (result.deletedCount > 0) {
+      console.log(
+        `Cleaned up ${result.deletedCount} students deleted more than 30 days ago`,
+      );
+    }
+  } catch (error) {
+    console.error("Error cleaning up old deleted students:", error);
   }
 };

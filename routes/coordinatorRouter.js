@@ -93,7 +93,7 @@ coordinatorRouter.get("/myAttendance", async (req, res) => {
     // Get attendance photos sorted by date (latest first)
     const attendancePhotos = coordinator.attendancePhotos
       ? coordinator.attendancePhotos.sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
+          (a, b) => new Date(b.date) - new Date(a.date),
         )
       : [];
 
@@ -126,6 +126,53 @@ coordinatorRouter.get("/myAttendance", async (req, res) => {
   }
 });
 
+// Helper function to reverse geocode coordinates to address
+const getAddressFromCoordinates = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+    );
+    const data = await response.json();
+
+    // Return address or coordinates if address not found
+    if (data.address) {
+      // Try to build a readable address with more precision
+      const addressParts = [];
+
+      // Add street-level details first (most specific)
+      if (data.address.house_number)
+        addressParts.push(data.address.house_number);
+      if (data.address.road) addressParts.push(data.address.road);
+      if (data.address.neighbourhood)
+        addressParts.push(data.address.neighbourhood);
+      if (data.address.suburb) addressParts.push(data.address.suburb);
+
+      // Then add area details
+      if (data.address.city) addressParts.push(data.address.city);
+      if (data.address.district && data.address.district !== data.address.city)
+        addressParts.push(data.address.district);
+      if (data.address.state) addressParts.push(data.address.state);
+      if (data.address.country) addressParts.push(data.address.country);
+
+      if (addressParts.length > 0) {
+        const readableAddress = addressParts.join(", ");
+        // If address is detailed enough, use it; otherwise append coordinates
+        if (addressParts.length > 2) {
+          return readableAddress;
+        } else {
+          // For addresses with few parts, add precise coordinates
+          return `${readableAddress} (${latitude.toFixed(6)}, ${longitude.toFixed(6)})`;
+        }
+      }
+    }
+    // Fallback to precise coordinates if no address found
+    return `Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+  } catch (error) {
+    console.error("Geocoding error:", error);
+    return `Location: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+  }
+};
+
 coordinatorRouter.post(
   "/myAttendance/upload",
   attendanceUpload.single("attendancePhoto"),
@@ -136,6 +183,21 @@ coordinatorRouter.post(
       }
 
       const coordinatorId = req.user._id;
+      const { latitude, longitude } = req.body;
+
+      // Get human-readable address from coordinates
+      let location = null;
+      if (latitude && longitude) {
+        const address = await getAddressFromCoordinates(
+          parseFloat(latitude),
+          parseFloat(longitude),
+        );
+        location = {
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
+          address: address,
+        };
+      }
 
       const attendancePhoto = {
         date: new Date(),
@@ -143,6 +205,7 @@ coordinatorRouter.post(
           fieldname: req.file.fieldname,
           path: req.file.path,
         },
+        location: location,
       };
 
       await Coordinator.findByIdAndUpdate(coordinatorId, {
@@ -154,7 +217,7 @@ coordinatorRouter.post(
       console.error("Error uploading attendance:", error);
       res.status(500).send("Error uploading attendance");
     }
-  }
+  },
 );
 
 coordinatorRouter.get("/addTeacher", async (req, res) => {
@@ -185,7 +248,7 @@ coordinatorRouter.post(
     } catch (error) {
       res.send(error);
     }
-  }
+  },
 );
 
 coordinatorRouter.get("/teacherDetails/:id", async (req, res) => {
@@ -269,7 +332,7 @@ coordinatorRouter.get("/attendance/:id", async (req, res) => {
         ).toFixed(1);
       }
       return data;
-    }
+    },
   );
 
   res.render("coordinator/attendance", {
@@ -291,7 +354,7 @@ coordinatorRouter.get("/attendance/:id/photos", async (req, res) => {
 
     // Photos latest first
     const attendancePhotos = (teacher.attendancePhotos || []).sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
+      (a, b) => new Date(b.date) - new Date(a.date),
     );
 
     // y = calendar days since coordinator cleared reports (using IST timezone)
@@ -327,7 +390,7 @@ coordinatorRouter.get("/delete/:id", async (req, res) => {
 
     // Remove teacher reference from coordinator's teachers array
     currUser.teachers = currUser.teachers.filter(
-      (teacher) => teacher.toString() != teacherId
+      (teacher) => teacher.toString() != teacherId,
     );
     const newUser = await currUser.save();
 
@@ -350,11 +413,11 @@ coordinatorRouter.get("/delete/:id", async (req, res) => {
         // Remove reports from coordinator's current day report
         if (newUser.coordReport && newUser.coordReport.teacherReports) {
           const reportIds = reportsToDelete.map((report) =>
-            report._id.toString()
+            report._id.toString(),
           );
           newUser.coordReport.teacherReports =
             newUser.coordReport.teacherReports.filter(
-              (lecture) => !reportIds.includes(lecture.tReportId.toString())
+              (lecture) => !reportIds.includes(lecture.tReportId.toString()),
             );
           await newUser.save();
         }
@@ -373,9 +436,8 @@ coordinatorRouter.get("/reportadd/:id1/:id2", async (req, res) => {
   const teacherId = req.params.id1;
   const teacherReportId = req.params.id2;
 
-  const lecDetails = await TeacherReport.findById(teacherReportId).populate(
-    "teacher"
-  );
+  const lecDetails =
+    await TeacherReport.findById(teacherReportId).populate("teacher");
   const { teacher } = lecDetails;
   currUser.coordReport.teacherReports.push({
     tReportId: teacherReportId,
@@ -403,7 +465,7 @@ coordinatorRouter.get("/report", async (req, res) => {
   if (currUser.coordReport && currUser.coordReport.teacherReports) {
     currUser.coordReport.teacherReports =
       currUser.coordReport.teacherReports.filter(
-        (lecture) => lecture.tReportId !== null
+        (lecture) => lecture.tReportId !== null,
       );
     await currUser.save();
   }
@@ -439,7 +501,7 @@ coordinatorRouter.get("/teacherDetails/:id1/delete/:id2", async (req, res) => {
   ) {
     currUser.coordReport.teacherReports =
       currUser.coordReport.teacherReports.filter(
-        (lecture) => lecture.tReportId.toString() !== teacherReportId
+        (lecture) => lecture.tReportId.toString() !== teacherReportId,
       );
     await currUser.save();
   }
@@ -448,7 +510,7 @@ coordinatorRouter.get("/teacherDetails/:id1/delete/:id2", async (req, res) => {
   if (delReport) {
     await CoordReport.updateMany(
       { teacherReports: { $in: [teacherReportId] } },
-      { $pull: { teacherReports: teacherReportId } }
+      { $pull: { teacherReports: teacherReportId } },
     );
 
     // Delete coordinator reports with empty teacherReports array
@@ -480,14 +542,14 @@ coordinatorRouter.get("/teacherDetails/:id/clearReports", async (req, res) => {
       // Remove report from the daily coordinator report if present
       currUser.coordReport.teacherReports =
         currUser.coordReport.teacherReports.filter(
-          (lecture) => lecture.tReportId.toString() !== report._id.toString()
+          (lecture) => lecture.tReportId.toString() !== report._id.toString(),
         );
       await currUser.save();
 
       // Remove report references from coordinator reports
       await CoordReport.updateMany(
         { teacherReports: { $in: [report._id] } },
-        { $pull: { teacherReports: report._id } }
+        { $pull: { teacherReports: report._id } },
       );
     }
 
@@ -534,7 +596,7 @@ coordinatorRouter.get("/lectureDetails/:id", async (req, res) => {
   const currUser = req.user;
 
   const lecture = await TeacherReport.findById(teacherReportId).populate(
-    "studentAttendance.student"
+    "studentAttendance.student",
   );
 
   res.render("coordinator/lectureDetails", {
@@ -578,7 +640,7 @@ coordinatorRouter.get("/createCoordinatorReport", async (req, res) => {
 
   for (let i = 0; i < num; i++) {
     newCoordReport.teacherReports.push(
-      currUser.coordReport.teacherReports[i].tReportId
+      currUser.coordReport.teacherReports[i].tReportId,
     );
   }
 
@@ -632,7 +694,7 @@ coordinatorRouter.post("/assignTeacher/:id", async (req, res) => {
       },
       {
         $pull: { teacherReports: { $in: reportIds } },
-      }
+      },
     );
 
     // Delete empty CoordReports for current coordinator
@@ -686,14 +748,14 @@ coordinatorRouter.post("/assignTeacher/:id", async (req, res) => {
         currUser.coordReport.teacherReports.filter(
           (lecture) =>
             !reportIds.some(
-              (id) => id.toString() === lecture.tReportId?.toString()
-            )
+              (id) => id.toString() === lecture.tReportId?.toString(),
+            ),
         );
     }
 
     // Remove teacher from current coordinator
     currUser.teachers = currUser.teachers.filter(
-      (teacher) => teacher.toString() !== teacherId
+      (teacher) => teacher.toString() !== teacherId,
     );
     await currUser.save();
 
@@ -715,7 +777,7 @@ coordinatorRouter.get("/removereport/:id", async (req, res) => {
     // console.log(id + "     " + currUser.coordReport.teacherReports[0]._id);
     currUser.coordReport.teacherReports =
       currUser.coordReport.teacherReports.filter(
-        (lecture) => lecture._id.toString() !== id
+        (lecture) => lecture._id.toString() !== id,
       );
     await currUser.save();
     res.redirect("/coordinator/report");
@@ -737,7 +799,7 @@ coordinatorRouter.post("/download-image", async (req, res) => {
 
     res.setHeader(
       "Content-Type",
-      response.headers["content-type"] || "application/octet-stream"
+      response.headers["content-type"] || "application/octet-stream",
     );
     res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
 
@@ -766,7 +828,7 @@ coordinatorRouter.post("/download-all-report-images", async (req, res) => {
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="${address}_${date}_images.zip"`
+      `attachment; filename="${address}_${date}_images.zip"`,
     );
 
     const archive = archiver("zip", { zlib: { level: 9 } });
@@ -825,7 +887,7 @@ coordinatorRouter.post("/reject-report/:reportId", async (req, res) => {
     // Remove report from coordinator reports
     await CoordReport.updateMany(
       { teacherReports: { $in: [reportId] } },
-      { $pull: { teacherReports: reportId } }
+      { $pull: { teacherReports: reportId } },
     );
 
     // Delete coordinator reports with empty teacherReports array
@@ -851,7 +913,7 @@ coordinatorRouter.post("/delete-all-reports", async (req, res) => {
 
     // Get all teachers for this coordinator
     const coordinator = await Coordinator.findById(currUser._id).populate(
-      "teachers"
+      "teachers",
     );
 
     if (
@@ -885,7 +947,7 @@ coordinatorRouter.post("/delete-all-reports", async (req, res) => {
             } catch (error) {
               console.error(
                 `Error deleting image Lectures/${publicId}:`,
-                error
+                error,
               );
             }
           }
@@ -924,10 +986,10 @@ coordinatorRouter.post("/delete-all-reports", async (req, res) => {
                 .split(".")[0];
               try {
                 await cloudinary.uploader.destroy(
-                  `TeacherAttendance/${publicId}`
+                  `TeacherAttendance/${publicId}`,
                 );
                 console.log(
-                  `Deleted teacher attendance photo: TeacherAttendance/${publicId}`
+                  `Deleted teacher attendance photo: TeacherAttendance/${publicId}`,
                 );
               } catch (error) {
                 console.error(`Error deleting attendance photo:`, error);
@@ -956,12 +1018,12 @@ coordinatorRouter.post("/delete-all-reports", async (req, res) => {
           try {
             await cloudinary.uploader.destroy(`TeacherAttendance/${publicId}`);
             console.log(
-              `Deleted coordinator attendance photo: TeacherAttendance/${publicId}`
+              `Deleted coordinator attendance photo: TeacherAttendance/${publicId}`,
             );
           } catch (error) {
             console.error(
               `Error deleting coordinator attendance photo:`,
-              error
+              error,
             );
           }
         }
@@ -1007,7 +1069,7 @@ coordinatorRouter.post("/download-all-attendance-photos", async (req, res) => {
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="${user.username}_attendance_photos.zip"`
+      `attachment; filename="${user.username}_attendance_photos.zip"`,
     );
 
     const archive = archiver("zip", { zlib: { level: 9 } });
@@ -1041,7 +1103,7 @@ coordinatorRouter.post("/download-all-attendance-photos", async (req, res) => {
         } catch (error) {
           console.error(
             `Error downloading attendance photo ${i}:`,
-            error.message
+            error.message,
           );
         }
       }
